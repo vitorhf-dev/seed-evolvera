@@ -1,0 +1,2 @@
+import { heading, media, sectionShell, type RenderContext, type SectionOf } from "./shared.js";
+export const renderGallery = (section: SectionOf<"gallery">, context: RenderContext): string => { const items = section.items.map((item) => media(item, context)).filter(Boolean); return items.length ? sectionShell(section, `${heading(section.heading, "Visão de campo")}<div class="grid gallery">${items.join("")}</div>`) : ""; };
