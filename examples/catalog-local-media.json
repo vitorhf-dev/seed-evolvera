@@ -1,0 +1,118 @@
+{
+  "schemaVersion": "1",
+  "preset": "catalog-driven",
+  "company": {
+    "name": "Linha Brava Componentes",
+    "tagline": "Uma seleção objetiva para especificações industriais",
+    "summary": "Catálogo demonstrativo para organizar componentes, aplicações e próximos passos sem prometer disponibilidade ou desempenho não fornecidos.",
+    "primaryCta": { "label": "Pedir orientação sobre um item", "href": "#contato" },
+    "contactLinks": [ { "label": "Falar com a equipe", "href": "mailto:catalogo@linhabrava.example" } ],
+    "footerLinks": [ { "label": "Catálogo", "href": "/" } ]
+  },
+  "seo": {
+    "title": "Linha Brava Componentes | Catálogo demonstrativo",
+    "description": "Catálogo demonstrativo de componentes industriais com caminhos claros para consulta e especificação."
+  },
+  "theme": { "primary": "#213547", "accent": "#D66B2F", "shape": "square", "density": "spacious" },
+  "assets": [
+    {
+      "id": "componente-catalogo",
+      "path": "assets/catalogo-item.png",
+      "role": "product",
+      "alt": "Componente industrial apresentado em fundo neutro",
+      "width": 640,
+      "height": 480,
+      "provenance": { "kind": "caller-staged", "source": "Arquivo preparado pelo chamador", "license": "Uso controlado pelo chamador" }
+    }
+  ],
+  "pages": [
+    {
+      "id": "home",
+      "route": "/",
+      "title": "Catálogo",
+      "sections": [
+        {
+          "kind": "hero",
+          "id": "catalogo-inicio",
+          "title": "Encontre uma configuração compatível com o seu cenário",
+          "body": "Organize a consulta por aplicação, detalhe a necessidade e avance com informações verificáveis.",
+          "actions": [ { "label": "Explorar o catálogo", "href": "#selecao" } ],
+          "media": { "assetId": "componente-catalogo", "treatment": { "fit": "contain", "cropPolicy": "no-crop", "composition": "inset" } }
+        },
+        {
+          "kind": "proofRail",
+          "id": "criterios",
+          "claims": [
+            { "value": "Aplicação", "label": "Contexto antes da escolha", "provenance": { "kind": "caller-supplied", "reference": "Exemplo neutro fornecido pelo chamador" } },
+            { "value": "Especificação", "label": "Detalhes organizados", "provenance": { "kind": "caller-supplied", "reference": "Exemplo neutro fornecido pelo chamador" } }
+          ]
+        },
+        {
+          "kind": "cardGrid",
+          "id": "selecao",
+          "variant": "catalog",
+          "heading": "Uma seleção curta para começar a consulta",
+          "cards": [
+            { "id": "item-principal", "title": "Componente de referência", "body": "Use o item staged pelo chamador como ponto de partida para uma conversa técnica.", "media": { "assetId": "componente-catalogo", "treatment": { "fit": "contain", "cropPolicy": "no-crop" } } },
+            { "id": "composicao", "title": "Composição do pedido", "body": "Reúna aplicação, dimensões e condições conhecidas antes de solicitar uma orientação." }
+          ]
+        },
+        {
+          "kind": "gallery",
+          "id": "galeria",
+          "heading": "Item apresentado no catálogo",
+          "items": [ { "assetId": "componente-catalogo", "treatment": { "fit": "contain", "cropPolicy": "no-crop", "frame": "bordered" } } ]
+        },
+        {
+          "kind": "splitFeature",
+          "id": "especificacao",
+          "heading": "A imagem é referência, não substitui a especificação",
+          "body": "Dimensões, aplicação e condições devem ser confirmadas pelo chamador antes de qualquer decisão.",
+          "points": [ "Contexto de uso", "Dimensões conhecidas", "Condições de aplicação" ],
+          "media": { "assetId": "componente-catalogo", "treatment": { "fit": "contain", "cropPolicy": "no-crop" } }
+        },
+        {
+          "kind": "metricsBand",
+          "id": "marcadores",
+          "claims": [
+            { "value": "Contexto", "label": "Para orientar a consulta", "provenance": { "kind": "caller-supplied", "reference": "Exemplo neutro fornecido pelo chamador" } },
+            { "value": "Registro", "label": "Para comparar opções", "provenance": { "kind": "caller-supplied", "reference": "Exemplo neutro fornecido pelo chamador" } }
+          ]
+        },
+        {
+          "kind": "processTimeline",
+          "id": "consulta",
+          "heading": "Como avançar na consulta",
+          "steps": [
+            { "id": "selecionar", "title": "Selecionar", "body": "Escolha um item ou descreva o cenário." },
+            { "id": "detalhar", "title": "Detalhar", "body": "Registre medidas e condições disponíveis." },
+            { "id": "confirmar", "title": "Confirmar", "body": "Valide a configuração antes do próximo passo." }
+          ]
+        },
+        {
+          "kind": "specGrid",
+          "id": "dados",
+          "heading": "Dados úteis para a consulta",
+          "groups": [ { "heading": "Informações a reunir", "specs": [ { "label": "Aplicação", "value": "Cenário de uso" }, { "label": "Medidas", "value": "Dimensões disponíveis" } ] } ]
+        },
+        {
+          "kind": "faq",
+          "id": "perguntas",
+          "heading": "Dúvidas antes de escolher",
+          "items": [
+            { "question": "A imagem confirma o produto?", "answer": "Não. Ela é um arquivo staged pelo chamador e serve apenas como referência visual nesta configuração." },
+            { "question": "O que devo enviar para uma orientação?", "answer": "Descreva a aplicação e compartilhe as dimensões ou condições que já conhece." }
+          ]
+        },
+        {
+          "kind": "cta",
+          "id": "orientacao",
+          "title": "Precisa organizar uma consulta?",
+          "body": "Envie o contexto conhecido para que o próximo passo possa ser definido com clareza.",
+          "actions": [ { "label": "Pedir orientação", "href": "#contato" } ],
+          "media": { "assetId": "componente-catalogo", "treatment": { "fit": "contain", "cropPolicy": "no-crop" } }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "schemaVersion": "1",
+  "preset": "service-driven",
+  "company": {
+    "name": "Oficina Norte Técnica",
+    "tagline": "Critério técnico para decisões industriais",
+    "summary": "Serviços de avaliação e acompanhamento para operações que precisam de um próximo passo claro.",
+    "primaryCta": { "label": "Conversar sobre uma necessidade", "href": "#contato" },
+    "contactLinks": [ { "label": "Enviar mensagem", "href": "mailto:contato@oficinanorte.example" } ],
+    "footerLinks": [ { "label": "Início", "href": "/" } ]
+  },
+  "seo": {
+    "title": "Oficina Norte Técnica | Serviços industriais",
+    "description": "Serviços industriais com escopo claro, atendimento consultivo e acompanhamento responsável."
+  },
+  "theme": { "primary": "#145C4A", "accent": "#E8A317", "shape": "soft", "density": "comfortable" },
+  "assets": [],
+  "pages": [
+    {
+      "id": "home",
+      "route": "/",
+      "title": "Início",
+      "sections": [
+        {
+          "kind": "hero",
+          "id": "inicio",
+          "title": "Decisões técnicas para uma operação mais consistente",
+          "body": "Da avaliação ao acompanhamento, organizamos cada etapa com clareza e responsabilidade.",
+          "actions": [ { "label": "Solicitar avaliação", "href": "#contato" } ]
+        },
+        {
+          "kind": "proofRail",
+          "id": "evidencias",
+          "claims": [
+            { "value": "Atendimento técnico", "label": "Condução próxima em cada etapa", "provenance": { "kind": "caller-supplied", "reference": "Exemplo neutro fornecido pelo chamador" } },
+            { "value": "Escopo claro", "label": "Prioridades documentadas", "provenance": { "kind": "caller-supplied", "reference": "Exemplo neutro fornecido pelo chamador" } }
+          ]
+        },
+        {
+          "kind": "cardGrid",
+          "id": "servicos",
+          "variant": "service",
+          "heading": "Serviços organizados em torno da sua necessidade",
+          "cards": [
+            { "id": "diagnostico", "title": "Diagnóstico", "body": "Levantamento técnico para reconhecer contexto, prioridades e próximos passos." },
+            { "id": "execucao", "title": "Execução", "body": "Condução do escopo aprovado com comunicação objetiva." }
+          ]
+        },
+        {
+          "kind": "splitFeature",
+          "id": "criterio",
+          "heading": "Critério técnico do início ao acompanhamento",
+          "body": "Uma composição editorial completa mesmo quando nenhuma imagem foi fornecida.",
+          "points": [ "Leitura do cenário", "Definição de prioridades", "Acompanhamento responsável" ]
+        },
+        {
+          "kind": "metricsBand",
+          "id": "indicadores",
+          "claims": [
+            { "value": "Planejamento", "label": "Antes da execução", "provenance": { "kind": "caller-supplied", "reference": "Exemplo neutro fornecido pelo chamador" } },
+            { "value": "Rastreabilidade", "label": "Ao longo do trabalho", "provenance": { "kind": "caller-supplied", "reference": "Exemplo neutro fornecido pelo chamador" } }
+          ]
+        },
+        {
+          "kind": "processTimeline",
+          "id": "processo",
+          "heading": "Uma jornada técnica compreensível",
+          "steps": [
+            { "id": "entender", "title": "Entender", "body": "Reunimos contexto e requisitos." },
+            { "id": "propor", "title": "Propor", "body": "Apresentamos um caminho compatível." },
+            { "id": "acompanhar", "title": "Acompanhar", "body": "Mantemos o avanço visível." }
+          ]
+        },
+        {
+          "kind": "specGrid",
+          "id": "especificacoes",
+          "heading": "Informações essenciais",
+          "groups": [ { "heading": "Atendimento", "specs": [ { "label": "Abordagem", "value": "Consultiva" }, { "label": "Registro", "value": "Por etapa" } ] } ]
+        },
+        {
+          "kind": "faq",
+          "id": "duvidas",
+          "heading": "Perguntas para começar com segurança",
+          "items": [
+            { "question": "Como o trabalho começa?", "answer": "Com uma conversa para entender a necessidade e organizar a avaliação." },
+            { "question": "O escopo é apresentado antes?", "answer": "Sim. As prioridades e condições são alinhadas antes da execução." }
+          ]
+        },
+        {
+          "kind": "cta",
+          "id": "conversa",
+          "title": "Vamos entender o seu próximo desafio?",
+          "body": "Compartilhe o contexto da operação para iniciarmos uma conversa objetiva.",
+          "actions": [ { "label": "Entrar em contato", "href": "#contato" } ]
+        }
+      ]
+    }
+  ]
+}

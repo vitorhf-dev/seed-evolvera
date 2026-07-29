@@ -11,14 +11,21 @@
       "import": "./dist/index.js"
     }
   },
+  "bin": {
+    "evolvera-industrial-seed": "./dist/cli.js"
+  },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "docs",
+    "examples"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json",
     "test": "node --import tsx --test tests/*.test.ts",
-    "check": "npm run typecheck && npm test && npm run build"
+    "check": "npm run typecheck && npm test && npm run build",
+    "render": "tsx src/cli.ts"
   },
   "dependencies": {
     "zod": "^4.4.3"
