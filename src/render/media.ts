@@ -18,8 +18,8 @@ export const resolveMedia = (reference: MediaReference, assets: ReadonlyMap<stri
   } catch { return { assetId: asset.id, role: asset.role, selected: false, reason: "file-missing" }; }
   const treatment = reference.treatment ?? {};
   const locked = protectedRole(asset.role);
-  const fit = locked ? "contain" : (treatment.fit ?? "cover");
-  const cropPolicy = locked ? "no-crop" : (treatment.cropPolicy ?? (fit === "cover" ? "allow" : "no-crop"));
+  const cropPolicy = locked ? "no-crop" : (treatment.cropPolicy ?? (treatment.fit === "contain" ? "no-crop" : "allow"));
+  const fit = locked || cropPolicy === "no-crop" ? "contain" : (treatment.fit ?? "cover");
   const composition = locked ? "standalone" : (treatment.composition ?? "inset");
   if (locked && (fit === "cover" || cropPolicy === "allow" || composition === "full-bleed")) return { assetId: asset.id, role: asset.role, selected: false, reason: "role-incompatible" };
   if (fit === "cover" && (asset.width < 129 || asset.height < 129)) return { assetId: asset.id, role: asset.role, selected: false, reason: "insufficient-dimensions" };

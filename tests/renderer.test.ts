@@ -28,19 +28,22 @@ test("catalog media uses contain/no-crop, all ten markers, and preserves assets"
 
 test("all controlled media fields affect closed markup, intrinsic caps, logo containment, and card-grid traversal", () => {
   const root = temporary(); try {
-    stageCatalogAssets(root); writePng(join(root, "assets", "editorial.png"), 360, 240); writePng(join(root, "assets", "logo.png"), 600, 60);
+    stageCatalogAssets(root); writePng(join(root, "assets", "editorial.png"), 360, 240); writePng(join(root, "assets", "editorial-no-crop.png"), 360, 240); writePng(join(root, "assets", "logo.png"), 600, 60);
     const config = catalogConfig(); config.assets!.push(
       { id: "editorial", path: "assets/editorial.png", role: "editorial", alt: "Detalhe editorial", width: 360, height: 240, provenance: { kind: "caller-staged", source: "fixture", license: "teste" } },
+      { id: "editorial-no-crop", path: "assets/editorial-no-crop.png", role: "editorial", alt: "Detalhe editorial sem corte", width: 360, height: 240, provenance: { kind: "caller-staged", source: "fixture", license: "teste" } },
       { id: "logo", path: "assets/logo.png", role: "logo", alt: "Marca de teste", width: 600, height: 60, provenance: { kind: "caller-staged", source: "fixture", license: "teste" } },
       { id: "ausente", path: "assets/ausente.png", role: "editorial", alt: "Mídia ausente", width: 360, height: 240, provenance: { kind: "caller-staged", source: "fixture", license: "teste" } },
     ); config.company.logoAssetId = "logo";
     const grid = config.pages[0]!.sections.find((item) => item.kind === "cardGrid"); assert.equal(grid?.kind, "cardGrid"); if (grid?.kind === "cardGrid") grid.media = [
       { assetId: "editorial", treatment: { fit: "cover", cropPolicy: "allow", aspect: "wide", frame: "bordered", composition: "full-bleed", density: "spacious", sizeBucket: "large" } },
+      { assetId: "editorial-no-crop", treatment: { fit: "cover", cropPolicy: "no-crop" } },
       { assetId: "ausente" },
     ];
     const result = renderSite(config, { outDir: root }); const html = readFileSync(join(root, "index.html"), "utf8");
-    const decision = result.receipt.decisions.find((item) => item.assetId === "editorial"); assert.deepEqual({ frame: decision?.frame, composition: decision?.composition, density: decision?.density, sizeBucket: decision?.sizeBucket }, { frame: "bordered", composition: "full-bleed", density: "spacious", sizeBucket: "large" });
-    assert.match(html, /frame-bordered composition-full-bleed size-large density-spacious/); assert.match(html, /data-card-grid-media/); assert.match(html, /--intrinsic-width:360px;--intrinsic-height:240px/); assert.match(html, /class="brand-logo"[^>]*--logo-width:600px;--logo-height:60px/); assert.ok(result.receipt.decisions.some((item) => item.assetId === "ausente" && !item.selected)); assert.doesNotMatch(html, /src="[^"]*ausente/);
+    const decision = result.receipt.decisions.find((item) => item.assetId === "editorial"); assert.deepEqual({ fit: decision?.fit, cropPolicy: decision?.cropPolicy, frame: decision?.frame, composition: decision?.composition, density: decision?.density, sizeBucket: decision?.sizeBucket }, { fit: "cover", cropPolicy: "allow", frame: "bordered", composition: "full-bleed", density: "spacious", sizeBucket: "large" });
+    const noCropDecision = result.receipt.decisions.find((item) => item.assetId === "editorial-no-crop"); assert.deepEqual({ fit: noCropDecision?.fit, cropPolicy: noCropDecision?.cropPolicy }, { fit: "contain", cropPolicy: "no-crop" });
+    assert.match(html, /frame-bordered composition-full-bleed size-large density-spacious/); assert.match(html, /style="--fit:contain;[^>]*><img src="assets\/editorial-no-crop\.png"/); assert.match(html, /data-card-grid-media/); assert.match(html, /--intrinsic-width:360px;--intrinsic-height:240px/); assert.match(html, /class="brand-logo"[^>]*--logo-width:600px;--logo-height:60px/); assert.ok(result.receipt.decisions.some((item) => item.assetId === "ausente" && !item.selected)); assert.doesNotMatch(html, /src="[^"]*ausente/);
   } finally { rmSync(root, { recursive: true, force: true }); }
 });
 
