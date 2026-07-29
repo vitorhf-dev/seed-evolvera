@@ -14,10 +14,10 @@ The following read-only references informed boundary and pattern decisions. They
 
 ## Adopted at a high level
 
-The seed uses the useful *shape* of declarative sections, ordered content, explicit media inventory, provenance, and hybrid service/catalog composition. Those ideas are represented by this repository's own closed `SiteConfig` schema, renderer registry, and neutral examples.
+The persistent HTML/CSS site uses only the useful *shape* of ordered industrial information architecture: technical opening, product and capability routes, specifications, process, evidence boundaries and contextual inquiry. `blueprint.json` describes these checked-in pages and their stable/editable boundary; it does not generate them.
 
 ## Explicitly excluded
 
-No reference identity, client name, address, logo, color claim, copy, metric, testimonial, factual assertion, source asset, image bytes, screenshot, capture, CSS, HTML, prompt, `Unified` type, bostoide import, or implementation was copied or vendored. The examples use fictional neutral identities and caller-supplied provenance only. The catalog example names a caller-staged path but commits no media.
+No reference identity, client name, address, logo, color claim, copy, metric, testimonial, factual assertion, source asset, image bytes, screenshot, capture, CSS, HTML, prompt, type, import or implementation was copied or vendored. Reference repositories are not runtime, build or adaptation dependencies.
 
-The GDAQ note is not used as proof of a client or product claim; it only supports keeping capture evidence outside this seed package. Reference repositories remain read-only and outside this package's build and runtime graph.
+The GDAQ note is not proof of a client or product claim; it only supports keeping capture evidence outside this seed. The persistent pages, role tokens and local neutral diagrams are original implementation within this repository. Reference repositories remain read-only and outside its graph.

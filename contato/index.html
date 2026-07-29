@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="robots" content="noindex,nofollow">
+    <title>
+      Solicite avaliação técnica | [[EMPRESA.NOME]]
+    </title>
+    <meta name="description" content="Compartilhe aplicação e requisitos para preparar uma avaliação técnica. O envio depende da integração configurada pelo cliente.">
+    <link rel="stylesheet" href="../styles/tokens.css">
+    <link rel="stylesheet" href="../styles/base.css">
+    <link rel="stylesheet" href="../styles/components.css">
+  </head>
+  <body data-page="contato">
+    <a class="skip-link" href="#conteudo">
+      Ir para o conteúdo principal
+    </a>
+    <p class="publication-warning">
+      Conteúdo de demonstração — substituir antes da publicação
+    </p>
+    <!-- SHELL:HEADER START -->
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="../index.html">
+          [[EMPRESA.NOME]]
+          <small>
+            [[EMPRESA.CATEGORIA]]
+          </small>
+        </a>
+        <nav class="nav desktop-nav" aria-label="Navegação principal">
+          <a href="../index.html">
+            Início
+          </a>
+          <a href="../empresa/index.html">
+            Empresa
+          </a>
+          <a href="../catalogo/index.html">
+            Catálogo
+          </a>
+          <a href="../servicos/capacidade-exemplo/index.html">
+            Capacidade
+          </a>
+          <a href="../contato/index.html" aria-current="page">
+            Contato
+          </a>
+        </nav>
+        <details class="mobile-nav">
+          <summary>
+            Menu
+          </summary>
+          <nav aria-label="Navegação principal móvel">
+            <a href="../index.html">
+              Início
+            </a>
+            <a href="../empresa/index.html">
+              Empresa
+            </a>
+            <a href="../catalogo/index.html">
+              Catálogo
+            </a>
+            <a href="../servicos/capacidade-exemplo/index.html">
+              Capacidade
+            </a>
+            <a href="../contato/index.html" aria-current="page">
+              Contato
+            </a>
+          </nav>
+        </details>
+        <a class="button header-cta" href="../contato/index.html">
+          Solicitar avaliação
+        </a>
+      </div>
+    </header>
+    <!-- SHELL:HEADER END -->
+    <main id="conteudo">
+      <section class="hero hero--editorial no-media" data-component="hero">
+        <div class="container hero-grid">
+          <div>
+            <p class="data">
+              Início / Compartilhe o contexto da sua necessidade
+            </p>
+            <p class="eyebrow">
+              Blueprint industrial
+            </p>
+            <h1>
+              Compartilhe o contexto da sua necessidade
+            </h1>
+            <p class="lead">
+              Informe aplicação e requisitos disponíveis. Campos ainda indefinidos podem ser descritos na mensagem.
+              <br>
+              <strong>
+                Este template valida os dados no navegador, mas não os envia até que uma integração de transporte seja configurada.
+              </strong>
+            </p>
+          </div>
+          <div class="hero-media hero-media--editorial technical-field" aria-hidden="true">
+            <p class="index">
+              01 / 06
+            </p>
+            <p>
+              [[CONTEÚDO TÉCNICO A SUBSTITUIR]]
+            </p>
+          </div>
+        </div>
+      </section>
+      <section class="section" data-component="form-direct-channels">
+        <div class="container form-layout">
+          <div>
+            <h2>
+              Preparar solicitação técnica
+            </h2>
+            <p>
+              Use dados profissionais e não inclua informações sensíveis desnecessárias.
+            </p>
+            <form aria-label="Solicitação de avaliação técnica">
+              <p>
+                Campos marcados com * são obrigatórios.
+              </p>
+              <fieldset>
+                <legend>
+                  Tipo de solicitação *
+                </legend>
+                <label>
+                  <input type="radio" name="tipo" required>
+                  Avaliação de produto/solução
+                </label>
+                <br>
+                <label>
+                  <input type="radio" name="tipo">
+                  Avaliação de serviço/capacidade
+                </label>
+                <br>
+                <label>
+                  <input type="radio" name="tipo">
+                  Contato técnico geral
+                </label>
+              </fieldset>
+              <div class="form-grid two-col">
+                <label class="field">
+                  Nome *
+                  <input name="nome" autocomplete="name" required placeholder="Seu nome">
+                </label>
+                <label class="field">
+                  Empresa *
+                  <input name="empresa" autocomplete="organization" required placeholder="Nome da empresa">
+                </label>
+                <label class="field">
+                  E-mail profissional
+                  <input type="email" name="email" autocomplete="email" placeholder="nome@empresa.com">
+                </label>
+                <label class="field">
+                  Telefone
+                  <input type="tel" name="telefone" autocomplete="tel" placeholder="(00) 00000-0000">
+                </label>
+              </div>
+              <label class="field">
+                Produto, família ou serviço de referência
+                <input name="referencia" placeholder="Ex.: [[referência do catálogo]]">
+              </label>
+              <label class="field">
+                Aplicação ou contexto de uso *
+                <textarea name="aplicacao" required placeholder="Descreva onde e como a solução será utilizada.">
+                </textarea>
+              </label>
+              <label class="field">
+                Material ou referência
+                <input name="material" placeholder="Material, classe, código ou a definir.">
+              </label>
+              <label class="field">
+                Dimensões e tolerâncias
+                <input name="dimensoes" placeholder="Informe unidades e critérios críticos.">
+              </label>
+              <label class="field">
+                Mensagem técnica *
+                <textarea name="mensagem" required placeholder="Inclua requisitos obrigatórios, preferências, dúvidas e dados pendentes.">
+                </textarea>
+              </label>
+              <button class="button" type="button">
+                Validar e preparar solicitação
+              </button>
+            </form>
+          </div>
+          <aside>
+            <div class="notice">
+              <h3>
+                Integração de envio pendente
+              </h3>
+              <p>
+                Configure um endpoint, e-mail transacional ou CRM antes de publicar este formulário como canal de envio. A validação local não equivale a recebimento.
+              </p>
+            </div>
+            <h3>
+              Canais diretos
+            </h3>
+            <p>
+              E-mail técnico — [[CONTATO.EMAIL]]
+              <br>
+              Telefone — [[CONTATO.TELEFONE]]
+              <br>
+              Horário — [[CONTATO.HORARIO]]
+            </p>
+            <p>
+              Canais diretos ainda não configurados. Preserve os dados e conclua a adaptação antes da publicação.
+            </p>
+          </aside>
+        </div>
+      </section>
+      <section class="section surface" data-component="next-steps">
+        <div class="container">
+          <h2>
+            O que deve acontecer depois da integração
+          </h2>
+          <p>
+            Este fluxo precisa ser confirmado pelo cliente antes da publicação.
+          </p>
+          <ol class="process">
+            <li>
+              <strong>
+                Entrega
+              </strong>
+              A integração encaminha os dados e retorna status verificável.
+            </li>
+            <li>
+              <strong>
+                Triagem
+              </strong>
+              A empresa revisa contexto, lacunas e escopo.
+            </li>
+            <li>
+              <strong>
+                Retorno
+              </strong>
+              Um canal confirmado comunica próximos passos.
+            </li>
+          </ol>
+        </div>
+      </section>
+      <section class="section" data-component="checklist-faq">
+        <div class="container split">
+          <div>
+            <h2>
+              Antes de concluir a solicitação
+            </h2>
+            <ul>
+              <li>
+                Aplicação e condição de uso
+              </li>
+              <li>
+                Produto/serviço de referência
+              </li>
+              <li>
+                Material
+              </li>
+              <li>
+                Dimensões e tolerâncias
+              </li>
+              <li>
+                Tratamentos/normas
+              </li>
+              <li>
+                Quantidade
+              </li>
+            </ul>
+          </div>
+          <div>
+            <details>
+              <summary>
+                O formulário já envia os dados?
+              </summary>
+              <p>
+                Não. O seed apenas valida; é necessário configurar transporte.
+              </p>
+            </details>
+            <details>
+              <summary>
+                Posso anexar um desenho?
+              </summary>
+              <p>
+                Não no baseline. Cite a referência e use um canal aprovado.
+              </p>
+            </details>
+            <details>
+              <summary>
+                Quando receberei retorno?
+              </summary>
+              <p>
+                O seed não define prazo.
+              </p>
+            </details>
+          </div>
+        </div>
+      </section>
+    </main>
+    <!-- SHELL:FOOTER START -->
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div>
+          <strong>
+            [[EMPRESA.NOME]]
+          </strong>
+          <p>
+            [[Descrição factual curta]].
+          </p>
+          <p>
+            Conteúdo de demonstração — substituir antes da publicação.
+          </p>
+        </div>
+        <nav aria-label="Navegação do rodapé">
+          <a href="../index.html">
+            Início
+          </a>
+          <a href="../empresa/index.html">
+            Empresa
+          </a>
+          <a href="../catalogo/index.html">
+            Catálogo
+          </a>
+          <a href="../servicos/capacidade-exemplo/index.html">
+            Capacidade
+          </a>
+          <a href="../contato/index.html" aria-current="page">
+            Contato
+          </a>
+        </nav>
+        <div>
+          <strong>
+            Contato
+          </strong>
+          <p>
+            [[CONTATO.EMAIL]]
+            <br>
+            [[CONTATO.TELEFONE]]
+            <br>
+            Canais diretos ainda não configurados.
+          </p>
+        </div>
+      </div>
+    </footer>
+    <!-- SHELL:FOOTER END -->
+  </body>
+</html>

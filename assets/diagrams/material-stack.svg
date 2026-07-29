@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" role="img" aria-labelledby="t d">
+  <title id="t">Diagrama neutro de camadas</title>
+  <desc id="d">Exemplo técnico sem valores, marcado para substituição.</desc>
+  <rect width="640" height="420" fill="#f1f3ef"/>
+  <g fill="none" stroke="#142126" stroke-width="3">
+    <path d="M90 110h460v55H90zM90 183h460v72H90zM90 273h460v42H90z"/>
+    <path d="M65 110v205m-12-205h24m-24 205h24"/>
+  </g>
+  <g fill="#142126" font-family="Arial" font-size="22">
+    <text x="110" y="145">[[CAMADA 01]]</text>
+    <text x="110" y="226">[[CAMADA 02]]</text>
+    <text x="110" y="302">[[CAMADA 03]]</text>
+    <text x="90" y="365">[SUBSTITUIR] — sem dados de produto</text>
+  </g>
+</svg>

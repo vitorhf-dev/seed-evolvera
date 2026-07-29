@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" role="img" aria-labelledby="t d">
+  <title id="t">Guia neutro de dimensões</title>
+  <desc id="d">Linhas de dimensão sem valores, marcadas para substituição.</desc>
+  <rect width="640" height="420" fill="#f1f3ef"/>
+  <g fill="none" stroke="#142126" stroke-width="3">
+    <rect x="160" y="120" width="320" height="160"/>
+    <path d="M160 90h320m-320-15v30m320-30v30M125 120v160m-15-160h30m-30 160h30"/>
+  </g>
+  <g fill="#142126" font-family="Arial" font-size="22">
+    <text x="270" y="75">[[DIMENSÃO]]</text>
+    <text x="26" y="210">[[DIMENSÃO]]</text>
+    <text x="120" y="350">[SUBSTITUIR] — nenhum valor fabricado</text>
+  </g>
+</svg>

@@ -1,0 +1,145 @@
+{
+  "name": "Evolvera persistent industrial static blueprint",
+  "drivesGeneration": false,
+  "boundary": {
+    "stable": "90%",
+    "editable": "10%"
+  },
+  "pages": [
+    {
+      "id": "home",
+      "path": "/",
+      "sections": [
+        "hero",
+        "proof-rail",
+        "route-choice",
+        "catalog-families",
+        "technical-fit",
+        "sectors",
+        "process",
+        "evidence",
+        "faq",
+        "cta"
+      ]
+    },
+    {
+      "id": "empresa",
+      "path": "/empresa/",
+      "sections": [
+        "hero",
+        "profile",
+        "principles",
+        "process",
+        "sectors",
+        "evidence",
+        "faq-cta",
+        "cta"
+      ]
+    },
+    {
+      "id": "catalogo",
+      "path": "/catalogo/",
+      "sections": [
+        "hero",
+        "filter",
+        "catalog-grid",
+        "selection-help",
+        "process-faq",
+        "cta"
+      ]
+    },
+    {
+      "id": "solucao-exemplo",
+      "path": "/catalogo/solucao-exemplo/",
+      "sections": [
+        "hero",
+        "fit-limits",
+        "specifications",
+        "gallery",
+        "process-documents",
+        "related",
+        "faq-cta",
+        "cta"
+      ]
+    },
+    {
+      "id": "capacidade-exemplo",
+      "path": "/servicos/capacidade-exemplo/",
+      "sections": [
+        "hero",
+        "scope-exclusions",
+        "process",
+        "technical-inputs",
+        "evidence",
+        "sectors",
+        "faq-cta",
+        "cta"
+      ]
+    },
+    {
+      "id": "contato",
+      "path": "/contato/",
+      "sections": [
+        "hero",
+        "form-direct-channels",
+        "next-steps",
+        "checklist-faq"
+      ]
+    }
+  ],
+  "components": [
+    "site-shell",
+    "hero",
+    "proof-rail",
+    "cards",
+    "split-feature",
+    "sectors",
+    "process",
+    "specifications",
+    "gallery",
+    "faq",
+    "cta",
+    "inquiry-form"
+  ],
+  "mediaModes": [
+    "media-rich",
+    "media-light",
+    "no-media"
+  ],
+  "stableInvariants": [
+    "semantic landmarks",
+    "one H1",
+    "noindex,nofollow",
+    "visible focus",
+    "44px controls",
+    "no-JS content",
+    "local-only resources",
+    "honest RFQ boundary"
+  ],
+  "editableTokenFamilies": [
+    "identity",
+    "semantic colors",
+    "copy",
+    "navigation labels",
+    "catalog and service data",
+    "proof",
+    "local media",
+    "contact and legal channels"
+  ],
+  "runtimeModules": [],
+  "mediaContracts": {
+    "modes": {
+      "media-rich": "Verified local media fills the component media region.",
+      "media-light": "One verified local asset appears as an inset figure with caption.",
+      "no-media": "Media leaves layout and accessibility flow; editorial content expands without an empty frame."
+    },
+    "heroVariants": [
+      "image",
+      "local-video",
+      "product-or-diagram",
+      "editorial-no-media"
+    ],
+    "defaultHeroVariant": "editorial-no-media",
+    "missingAssetFallback": "no-media"
+  }
+}

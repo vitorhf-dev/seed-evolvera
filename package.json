@@ -1,39 +1,21 @@
 {
   "name": "@evolvera/industrial-site-seed",
   "version": "0.1.0",
+  "private": true,
+  "description": "Persistent six-page static industrial website blueprint",
   "type": "module",
   "engines": {
     "node": ">=20"
   },
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
-    }
-  },
-  "bin": {
-    "evolvera-industrial-seed": "./dist/cli.js"
-  },
-  "files": [
-    "dist",
-    "README.md",
-    "docs",
-    "examples"
-  ],
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
-    "typecheck": "tsc -p tsconfig.json",
-    "test": "node --import tsx --test tests/*.test.ts",
-    "check": "npm run typecheck && npm test && npm run build",
-    "render": "tsx src/cli.ts"
-  },
-  "dependencies": {
-    "zod": "^4.4.3"
+    "serve": "node tools/serve.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "test:structure": "node --test tests/structure.test.mjs",
+    "test:server": "node --test tests/server.test.mjs",
+    "test:browser": "node --test tests/browser-foundation.test.mjs",
+    "check": "npm test"
   },
   "devDependencies": {
-    "@types/node": "^26.0.1",
-    "playwright": "^1.61.1",
-    "tsx": "^4.22.4",
-    "typescript": "^6.0.3"
+    "playwright": "^1.61.1"
   }
 }

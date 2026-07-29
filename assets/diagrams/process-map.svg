@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" role="img" aria-labelledby="t d">
+  <title id="t">Mapa neutro de processo</title>
+  <desc id="d">Fluxo editorial sem alegação de capacidade, marcado para substituição.</desc>
+  <rect width="640" height="420" fill="#f1f3ef"/>
+  <g fill="none" stroke="#142126" stroke-width="3">
+    <rect x="45" y="150" width="150" height="80"/>
+    <rect x="245" y="150" width="150" height="80"/>
+    <rect x="445" y="150" width="150" height="80"/>
+    <path d="M195 190h50m150 0h50"/>
+  </g>
+  <g fill="#142126" font-family="Arial" font-size="20">
+    <text x="75" y="198">[[ENTRADA]]</text>
+    <text x="270" y="198">[[ANÁLISE]]</text>
+    <text x="475" y="198">[[RETORNO]]</text>
+    <text x="105" y="310">[SUBSTITUIR] — processo real a confirmar</text>
+  </g>
+</svg>
