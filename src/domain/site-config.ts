@@ -2,6 +2,7 @@ import { z } from "zod";
 import {
   AssetProvenanceKindSchema,
   AssetRoleSchema,
+  PageTypeSchema,
   CardVariantSchema,
   ClaimKindSchema,
   CropPolicySchema,
@@ -20,8 +21,8 @@ import {
 } from "./vocabulary.js";
 
 const safeHref = (value: string): boolean => {
-  if (/[\u0000-\u001f\u007f]/.test(value) || value.startsWith("//")) return false;
-  if (value === "#" || /^#[A-Za-z][\w-]*$/.test(value)) return true;
+  if (/[\u0000-\u001f\u007f]/.test(value) || value.includes("%") || value.startsWith("//")) return false;
+  if (/^#[A-Za-z][A-Za-z0-9-]*$/.test(value)) return true;
   if (value.startsWith("/")) {
     if (value.startsWith("//") || /[?#\\]/.test(value)) return false;
     return value === "/" || value.slice(1).split("/").every((part) => part.length > 0 && part !== "." && part !== "..");
@@ -45,11 +46,11 @@ const safeCanonical = (value: string): boolean => {
 
 const safeAssetPath = (value: string): boolean =>
   value.startsWith("assets/") &&
-  !/[?#\\]/.test(value) &&
+  !/[\u0000-\u001f\u007f%?#\\]/.test(value) &&
   value.split("/").every((part) => part.length > 0 && part !== "." && part !== "..");
 
 const safeRoute = (value: string): boolean =>
-  value.startsWith("/") && !value.startsWith("//") && !/[?#\\]/.test(value) &&
+  value.startsWith("/") && !value.startsWith("//") && !/[\u0000-\u001f\u007f%?#\\]/.test(value) &&
   (value === "/" || value.slice(1).split("/").every((part) => part.length > 0 && part !== "." && part !== ".."));
 
 export const ActionSchema = z.object({
@@ -123,10 +124,18 @@ export const CtaSectionSchema = z.object({ kind: z.literal("cta"), id: SafeIdSch
 
 export const SectionSchema = z.discriminatedUnion("kind", [HeroSectionSchema, ProofRailSectionSchema, CardGridSectionSchema, SplitFeatureSectionSchema, MetricsBandSectionSchema, ProcessTimelineSectionSchema, GallerySectionSchema, SpecGridSectionSchema, FaqSectionSchema, CtaSectionSchema]);
 
+export const SeoSchema = z.object({
+  title: z.string().trim().min(1).max(70),
+  description: z.string().trim().min(1).max(180),
+  canonicalUrl: z.string().max(2048).refine(safeCanonical, "Must be a safe HTTPS URL").optional(),
+}).strict();
+
 export const PageSchema = z.object({
   id: SafeIdSchema,
   route: z.string().min(1).max(300).refine(safeRoute, "Must be a normalized root-relative route"),
+  pageType: PageTypeSchema,
   title: TextSchema,
+  seo: SeoSchema.optional(),
   sections: z.array(SectionSchema).min(1).max(40),
 }).strict();
 
@@ -138,12 +147,6 @@ export const CompanySchema = z.object({
   primaryCta: ActionSchema,
   contactLinks: z.array(ActionSchema).max(8).default([]),
   footerLinks: z.array(ActionSchema).max(12).default([]),
-}).strict();
-
-export const SeoSchema = z.object({
-  title: z.string().trim().min(1).max(70),
-  description: z.string().trim().min(1).max(180),
-  canonicalUrl: z.string().max(2048).refine(safeCanonical, "Must be a safe HTTPS URL").optional(),
 }).strict();
 
 export const ThemeSchema = z.object({
@@ -160,6 +163,7 @@ export const SiteConfigSchema = z.object({
   seo: SeoSchema,
   theme: ThemeSchema,
   assets: z.array(AssetSchema).max(200).default([]),
+  mainNavigation: z.array(ActionSchema).min(1).max(8),
   pages: z.array(PageSchema).min(1).max(20),
 }).strict();
 

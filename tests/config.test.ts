@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { parseRootHomeConfig, parseSiteConfig, type SiteConfigInput } from "../src/index.js";
+import { PAGE_TYPES, parseSiteConfig, type SiteConfigInput } from "../src/index.js";
 
 const minimal = (): SiteConfigInput => ({
   schemaVersion: "1",
@@ -13,9 +13,11 @@ const minimal = (): SiteConfigInput => ({
   },
   seo: { title: "Evolvera Industrial", description: "Soluções e atendimento técnico para a indústria." },
   theme: { primary: "#123456", accent: "#ABCDEF" },
+  mainNavigation: [{ label: "Início", href: "/" }, { label: "Contato", href: "#contato" }],
   pages: [{
     id: "home",
     route: "/",
+    pageType: "home",
     title: "Início",
     sections: [{ kind: "hero", id: "hero", title: "Soluções industriais", body: "Projetos sob medida.", actions: [{ label: "Contato", href: "tel:+5511999999999" }] }],
   }],
@@ -29,9 +31,15 @@ const invalidIssues = (input: unknown) => {
 const hasPath = (issues: ReturnType<typeof invalidIssues>, path: readonly (string | number)[], code?: string) =>
   issues.some((issue) => JSON.stringify(issue.path) === JSON.stringify(path) && (!code || issue.code === code));
 
+test("closed page type vocabulary and required root navigation remain explicit", () => {
+  assert.deepEqual(PAGE_TYPES, ["home", "institutional", "service", "catalog", "product", "contact"]);
+  const withoutNavigation = minimal(); delete (withoutNavigation as Record<string, unknown>).mainNavigation; assert.equal(hasPath(invalidIssues(withoutNavigation), ["mainNavigation"]), true);
+  const withoutRoot = minimal(); withoutRoot.pages[0]!.route = "/empresa"; assert.equal(hasPath(invalidIssues(withoutRoot), ["pages"]), true);
+});
+
 test("normalizes documented defaults deterministically", () => {
-  const first = parseRootHomeConfig(minimal());
-  const second = parseRootHomeConfig(minimal());
+  const first = parseSiteConfig(minimal());
+  const second = parseSiteConfig(minimal());
   assert.equal(first.success, true);
   assert.deepEqual(first, second);
   if (!first.success) return;
@@ -86,7 +94,7 @@ test("requires claim provenance and rejects unsupported section kinds", () => {
 });
 
 test("accepts normalized root-relative actions and no-media split features", () => {
-  for (const href of ["/", "/contato", "/produtos/molas"]) {
+  for (const href of ["/", "#contato"]) {
     const input = minimal();
     input.company.primaryCta.href = href;
     assert.equal(parseSiteConfig(input).success, true, href);
@@ -104,7 +112,7 @@ test("accepts normalized root-relative actions and no-media split features", () 
 });
 
 test("rejects unsafe URLs, paths, and invalid media treatments at their fields", () => {
-  for (const href of ["javascript:alert(1)", "//example.com", "/contato?x=1", "/contato#x", "/a/../b", "/contato/"]) {
+  for (const href of ["javascript:alert(1)", "//example.com", "/?x=1", "/#x", "/a/../b", "/contato/", "#", "/x%20y"]) {
     const unsafe = minimal();
     unsafe.company.primaryCta.href = href;
     assert.equal(hasPath(invalidIssues(unsafe), ["company", "primaryCta", "href"], "custom"), true, href);
@@ -127,10 +135,11 @@ test("rejects unsafe URLs, paths, and invalid media treatments at their fields",
   assert.equal(hasPath(invalidIssues(product), ["pages", 0, "sections", 0, "media", "treatment", "fit"], "custom"), true);
 });
 
-test("reports unsupported root render profiles on a stable path", () => {
+test("accepts ordered multipage blueprints and validates contextual links", () => {
   const input = minimal();
-  input.pages.push({ id: "contato", route: "/contato", title: "Contato", sections: [{ kind: "cta", id: "contato", title: "Contato", body: "Converse conosco.", actions: [{ label: "Ligar", href: "tel:+5511999999999" }] }] });
-  const result = parseRootHomeConfig(input);
-  assert.equal(result.success, false);
-  if (!result.success) assert.deepEqual(result.issues, [{ path: ["pages"], code: "unsupported_render_profile", message: "Root Home profile requires exactly one page with route /" }]);
+  input.mainNavigation = [{ label: "Empresa", href: "/empresa" }, { label: "Contato", href: "#contato" }];
+  input.pages.push({ id: "empresa", route: "/empresa", pageType: "institutional", title: "Empresa", seo: { title: "Empresa", description: "Conheça a empresa." }, sections: [{ kind: "cta", id: "empresa-cta", title: "Empresa", body: "Conheça nossa história.", actions: [{ label: "Início", href: "/" }] }] });
+  assert.equal(parseSiteConfig(input).success, true);
+  const invalid = minimal(); invalid.mainNavigation = [{ label: "Inexistente", href: "/inexistente" }];
+  assert.equal(hasPath(invalidIssues(invalid), ["mainNavigation", 0, "href"], "custom"), true);
 });

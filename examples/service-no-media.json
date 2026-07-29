@@ -15,10 +15,12 @@
   },
   "theme": { "primary": "#145C4A", "accent": "#E8A317", "shape": "soft", "density": "comfortable" },
   "assets": [],
+  "mainNavigation": [ { "label": "Início", "href": "/" }, { "label": "Contato", "href": "#contato" } ],
   "pages": [
     {
       "id": "home",
       "route": "/",
+      "pageType": "home",
       "title": "Início",
       "sections": [
         {

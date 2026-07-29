@@ -7,12 +7,12 @@ export interface MediaDecision { assetId: string; path?: string; selected: boole
 
 const protectedRole = (role: Asset["role"]): boolean => ["logo", "brand", "product"].includes(role);
 
-export const resolveMedia = (reference: MediaReference, assets: ReadonlyMap<string, Asset>, outDir: string): MediaDecision => {
+export const resolveMedia = (reference: MediaReference, assets: ReadonlyMap<string, Asset>, assetRoot: string): MediaDecision => {
   const asset = assets.get(reference.assetId);
   if (!asset) return { assetId: reference.assetId, selected: false, reason: "asset-missing" };
-  const absolute = resolve(outDir, asset.path);
-  const assetRoot = resolve(outDir, "assets") + sep;
-  if (!absolute.startsWith(assetRoot)) return { assetId: asset.id, role: asset.role, selected: false, reason: "role-incompatible" };
+  const absolute = resolve(assetRoot, asset.path);
+  const containedRoot = resolve(assetRoot, "assets") + sep;
+  if (!absolute.startsWith(containedRoot)) return { assetId: asset.id, role: asset.role, selected: false, reason: "role-incompatible" };
   try {
     if (!lstatSync(absolute).isFile()) return { assetId: asset.id, role: asset.role, selected: false, reason: "not-regular-file" };
   } catch { return { assetId: asset.id, role: asset.role, selected: false, reason: "file-missing" }; }

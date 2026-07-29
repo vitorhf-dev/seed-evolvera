@@ -11,7 +11,7 @@ const sourceCli = join(projectRoot, "src", "cli.ts");
 const temporary = (): string => mkdtempSync(join(tmpdir(), "evolvera-seed-cli-test-"));
 const example = (name: string): unknown => JSON.parse(readFileSync(join(projectRoot, "examples", name), "utf8"));
 
-const runSourceCli = (args: readonly string[]) => spawnSync(process.execPath, ["--import", "tsx", sourceCli, ...args], { cwd: projectRoot, encoding: "utf8" });
+const runSourceCli = (args: readonly string[], command: "render-page" | "render-site" = "render-page", route = "/") => spawnSync(process.execPath, ["--import", "tsx", sourceCli, command, ...args, ...(command === "render-page" ? ["--route", route] : [])], { cwd: projectRoot, encoding: "utf8" });
 const writeConfig = (root: string, name: string, value: unknown): string => {
   const path = join(root, name);
   writeFileSync(path, JSON.stringify(value), "utf8");
@@ -38,11 +38,11 @@ test("source CLI renders the no-media example into the exact caller directory", 
     const result = runSourceCli(["--config", configPath, "--out", outDir]);
     assert.equal(result.status, 0, result.stderr);
     assert.equal(result.stderr, "");
-    assert.deepEqual(JSON.parse(result.stdout), { ok: true, files: ["index.html", "seed-receipt.json", "seed-validation.json"], validation: { valid: true } });
+    assert.deepEqual(JSON.parse(result.stdout), { ok: true, mode: "page", files: ["index.html", "seed-receipt.json", "seed-validation.json"], validation: { valid: true } });
     assert.equal(readFileSync(join(outDir, "assets", "keep.bin"), "utf8"), "caller asset");
     assert.equal(readFileSync(join(outDir, "unrelated.txt"), "utf8"), "preserve me");
     const html = readFileSync(join(outDir, "index.html"), "utf8");
-    for (const section of ["hero", "proofRail", "cardGrid", "splitFeature", "metricsBand", "processTimeline", "specGrid", "faq", "cta"]) assert.match(html, new RegExp(`data-home-section="${section}"`));
+    for (const section of ["hero", "proofRail", "cardGrid", "splitFeature", "metricsBand", "processTimeline", "specGrid", "faq", "cta"]) assert.match(html, new RegExp(`data-blueprint-section="${section}"`));
     for (const target of html.matchAll(/href="#([a-z][a-z0-9-]*)"/g)) assert.match(html, new RegExp(`id="${target[1]}"`));
     assert.doesNotMatch(html, /<img\b/i);
     assert.ok(existsSync(join(outDir, "seed-receipt.json")));
@@ -50,6 +50,17 @@ test("source CLI renders the no-media example into the exact caller directory", 
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
+});
+
+test("source CLI render-site emits every example route and preserves caller files", () => {
+  const root = temporary();
+  try {
+    const configPath = writeConfig(root, "multipage.json", example("multipage-blueprint.json")); const outDir = join(root, "site"); mkdirSync(outDir, { recursive: true }); writeFileSync(join(outDir, "sentinel.txt"), "preserve");
+    const result = runSourceCli(["--config", configPath, "--out", outDir], "render-site");
+    assert.equal(result.status, 0, result.stderr); assert.equal(result.stderr, ""); assert.deepEqual(JSON.parse(result.stdout), { ok: true, mode: "site", files: ["index.html", "empresa/index.html", "servicos/manutencao/index.html", "catalogo/index.html", "contato/index.html", "seed-receipt.json", "seed-validation.json"], validation: { valid: true } });
+    for (const route of ["index.html", "empresa/index.html", "servicos/manutencao/index.html", "catalogo/index.html", "contato/index.html"]) assert.equal(existsSync(join(outDir, route)), true); assert.equal(readFileSync(join(outDir, "sentinel.txt"), "utf8"), "preserve"); assert.equal(JSON.parse(readFileSync(join(outDir, "seed-receipt.json"), "utf8")).pages.length, 5); assert.equal(JSON.parse(readFileSync(join(outDir, "seed-validation.json"), "utf8")).valid, true);
+    const rerun = runSourceCli(["--config", configPath, "--out", outDir], "render-site"); assert.equal(rerun.status, 0, rerun.stderr); assert.equal(rerun.stdout, result.stdout);
+  } finally { rmSync(root, { recursive: true, force: true }); }
 });
 
 test("source CLI renders the catalog example with caller-staged synthetic media", () => {
@@ -110,12 +121,11 @@ test("source CLI rejects bad arguments and invalid inputs without replacing fina
     assert.equal(existsSync(join(outDir, "seed-validation.json")), false);
 
     const multiPage = example("service-no-media.json") as { pages: Array<Record<string, unknown>> };
-    multiPage.pages.push({ id: "extra", route: "/extra", title: "Extra", sections: [{ kind: "cta", id: "extra-cta", title: "Extra", body: "Extra", actions: [{ label: "Voltar", href: "/" }] }] });
+    multiPage.pages.push({ id: "extra", route: "/extra", pageType: "service", title: "Extra", sections: [{ kind: "cta", id: "extra-cta", title: "Extra", body: "Extra", actions: [{ label: "Voltar", href: "/" }] }] });
     const profilePath = writeConfig(root, "multi-page.json", multiPage);
-    const profileError = runSourceCli(["--config", profilePath, "--out", outDir]);
-    assertIssue(profileError, "invalid_config");
-    assert.equal(JSON.parse(profileError.stderr).issues[0].code, "unsupported_render_profile");
-    assert.equal(readFileSync(join(outDir, "index.html"), "utf8"), "original final");
+    const selected = runSourceCli(["--config", profilePath, "--out", outDir]);
+    assert.equal(selected.status, 0, selected.stderr);
+    assert.equal(readFileSync(join(outDir, "index.html"), "utf8").includes("Extra"), false);
 
     const blockedOut = join(root, "not-a-directory");
     writeFileSync(blockedOut, "caller file", "utf8");

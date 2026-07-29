@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const PRESETS = ["service-driven", "catalog-driven", "hybrid"] as const;
+export const PAGE_TYPES = ["home", "institutional", "service", "catalog", "product", "contact"] as const;
 export const SECTION_KINDS = ["hero", "proofRail", "cardGrid", "splitFeature", "metricsBand", "processTimeline", "gallery", "specGrid", "faq", "cta"] as const;
 export const ASSET_ROLES = ["logo", "brand", "hero", "editorial", "product", "service", "sector", "gallery"] as const;
 export const PROVENANCE_KINDS = ["owned", "official", "licensed", "caller-staged"] as const;
@@ -17,6 +18,7 @@ export const THEME_DENSITIES = ["compact", "comfortable", "spacious"] as const;
 export const CARD_VARIANTS = ["service", "catalog", "sector"] as const;
 
 export const PresetSchema = z.enum(PRESETS);
+export const PageTypeSchema = z.enum(PAGE_TYPES);
 export const SectionKindSchema = z.enum(SECTION_KINDS);
 export const AssetRoleSchema = z.enum(ASSET_ROLES);
 export const AssetProvenanceKindSchema = z.enum(PROVENANCE_KINDS);

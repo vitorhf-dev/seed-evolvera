@@ -25,10 +25,12 @@
       "provenance": { "kind": "caller-staged", "source": "Arquivo preparado pelo chamador", "license": "Uso controlado pelo chamador" }
     }
   ],
+  "mainNavigation": [ { "label": "Início", "href": "/" }, { "label": "Contato", "href": "#contato" } ],
   "pages": [
     {
       "id": "home",
       "route": "/",
+      "pageType": "catalog",
       "title": "Catálogo",
       "sections": [
         {
