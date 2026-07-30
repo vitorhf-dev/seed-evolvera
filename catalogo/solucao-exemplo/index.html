@@ -78,9 +78,22 @@
       <section class="hero hero--editorial  no-media" data-component="hero">
         <div class="container hero-grid">
           <div>
-            <p class="data">
-              Início / [[PRODUTO.NOME]]
-            </p>
+            <nav class="breadcrumb data" aria-label="Navegação estrutural">
+              <span class="visually-hidden">
+                Você está em:
+              </span>
+              <ol>
+                <li>
+                  <a href="../../index.html">Início</a>
+                </li>
+                <li>
+                  <a href="../index.html">Catálogo</a>
+                </li>
+                <li>
+                  <span aria-current="page">[[PRODUTO.NOME]]</span>
+                </li>
+              </ol>
+            </nav>
             <p class="eyebrow">
               Blueprint industrial
             </p>
@@ -90,9 +103,54 @@
             <p class="lead">
               [[Descrição funcional de 18–30 palavras, sem alegar desempenho ou compatibilidade.]]
             </p>
+            <dl class="hero-facts">
+              <div>
+                <dt>
+                  Material
+                </dt>
+                <dd>
+                  [[A CONFIRMAR]]
+                </dd>
+              </div>
+              <div>
+                <dt>
+                  Dimensões
+                </dt>
+                <dd>
+                  [[A CONFIRMAR]]
+                </dd>
+              </div>
+              <div>
+                <dt>
+                  Tolerâncias
+                </dt>
+                <dd>
+                  [[A CONFIRMAR]]
+                </dd>
+              </div>
+              <div>
+                <dt>
+                  Tratamentos
+                </dt>
+                <dd>
+                  [[A CONFIRMAR]]
+                </dd>
+              </div>
+              <div>
+                <dt>
+                  Documentação
+                </dt>
+                <dd>
+                  [[A CONFIRMAR]]
+                </dd>
+              </div>
+            </dl>
             <div class="actions">
-              <a class="button" href="../../contato/index.html">
+              <a class="button" href="../../contato/?tipo=produto&amp;ref=[[PRODUTO.SLUG]]">
                 Solicitar avaliação desta solução
+              </a>
+              <a class="button secondary" href="../">
+                Voltar ao catálogo
               </a>
             </div>
             <p>

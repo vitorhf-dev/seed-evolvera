@@ -73,10 +73,114 @@
   color: var(--color-primary);
 }
 
+/* Dark stages invert only the secondary action: the solid primary stays the single strongest CTA. */
+.hero.dark .button.secondary,
+.dark-band .button.secondary,
+.cta-band .button.secondary,
+.panel .button.secondary {
+  background: transparent;
+  border-color: var(--color-paper);
+  color: var(--color-paper);
+}
+
+.hero.dark .button.secondary:hover,
+.dark-band .button.secondary:hover,
+.cta-band .button.secondary:hover,
+.panel .button.secondary:hover {
+  background: var(--color-dark-soft);
+  border-color: var(--color-paper);
+  color: var(--color-paper);
+}
+
+.hero.dark .button.secondary:active,
+.dark-band .button.secondary:active,
+.cta-band .button.secondary:active,
+.panel .button.secondary:active {
+  background: var(--color-dark);
+  border-color: var(--color-surface-strong);
+  color: var(--color-surface-strong);
+}
+
 .actions {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
+}
+
+.breadcrumb {
+  margin-block: 0 var(--space-3);
+}
+
+.breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.breadcrumb li + li::before {
+  content: "/";
+  margin-right: var(--space-2);
+  color: var(--color-ink-soft);
+}
+
+.hero.dark .breadcrumb li + li::before {
+  color: var(--color-surface-strong);
+}
+
+.breadcrumb li {
+  display: flex;
+  align-items: center;
+}
+
+/* Minimum 44px targets are a fixed contract, so breadcrumb links are boxes, not bare inline text. */
+.breadcrumb a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  padding-inline: var(--space-1);
+  color: inherit;
+  text-decoration: underline;
+}
+
+.breadcrumb [aria-current="page"] {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.hero-facts {
+  display: grid;
+  gap: var(--space-2);
+  margin: var(--space-5) 0 0;
+}
+
+.hero-facts > div {
+  display: grid;
+  gap: var(--space-1);
+  padding-top: var(--space-2);
+  border-top: var(--border);
+}
+
+.hero-facts dt {
+  font: 700 .75rem/1.4 var(--font-mono);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--color-ink-soft);
+}
+
+.hero-facts dd {
+  margin: 0;
+}
+
+noscript.notice {
+  display: block;
+  margin-block: var(--space-4);
 }
 
 .hero {
@@ -563,6 +667,10 @@ body.js-enhanced .mobile-nav[open] nav {
   }
   .form-grid.two-col {
     grid-template-columns: repeat(2,1fr);
+  }
+  .hero-facts {
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    column-gap: var(--space-5);
   }
 }
 

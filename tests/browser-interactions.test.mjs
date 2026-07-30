@@ -442,3 +442,48 @@ test("unknown contextual query remains null and cannot prefill or infer context"
     assert.equal(context, null);
   });
 });
+
+test("with JavaScript enabled the no-JS notice remains present but unrendered", async () => {
+  await withPage("/contato/", {}, async (page) => {
+    const state = await page.evaluate(() => {
+      const form = document.querySelector("[data-inquiry-form]");
+      const notice = form.querySelector("noscript.notice");
+      return {
+        exists: Boolean(notice),
+        rendered: Boolean(notice?.getClientRects().length),
+        visibleText: form.innerText.includes("A validação assistida requer JavaScript."),
+      };
+    });
+    assert.deepEqual(state, { exists: true, rendered: false, visibleText: false });
+  });
+});
+
+test("capability hero actions are keyboard reachable and keep their exact targets", async () => {
+  await withPage("/servicos/capacidade-exemplo/", {}, async (page) => {
+    const actions = await page.evaluate(() => {
+      const links = [...document.querySelectorAll(".hero .actions a")];
+      return links.map((link) => ({
+        label: link.textContent.trim(),
+        href: link.getAttribute("href"),
+        className: link.className,
+        visible: link.getBoundingClientRect().height >= 44,
+      }));
+    });
+    assert.deepEqual(actions, [
+      { label: "Solicitar avaliação desta capacidade", href: "../../contato/?tipo=servico&ref=[[SERVICO.SLUG]]", className: "button", visible: true },
+      { label: "Ver como funciona", href: "#processo-capacidade", className: "button secondary", visible: true },
+    ]);
+
+    await page.evaluate(() => document.querySelector(".hero .actions a").focus());
+    assert.equal(await page.evaluate(() => document.activeElement.textContent.trim()), "Solicitar avaliação desta capacidade");
+    await page.keyboard.press("Tab");
+    assert.equal(await page.evaluate(() => document.activeElement.getAttribute("href")), "#processo-capacidade");
+    await page.keyboard.press("Enter");
+    await page.waitForFunction(() => window.location.hash === "#processo-capacidade");
+    const target = await page.evaluate(() => {
+      const section = document.querySelector("#processo-capacidade");
+      return { heading: section.querySelector("h2").textContent.trim(), overflows: document.documentElement.scrollWidth > window.innerWidth };
+    });
+    assert.deepEqual(target, { heading: "Etapas da capacidade", overflows: false });
+  });
+});

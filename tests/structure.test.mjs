@@ -124,6 +124,89 @@ test("semantic token/color authority, media contracts and static package are fix
   for (const path of ["src", "examples", "tsconfig.json", "tsconfig.build.json", "docs/CONFIGURATION.md"]) assert.equal(existsSync(path), false, path);
 });
 
+// Fixed orientation/conversion contracts introduced by the polish checkpoint. Independent of blueprint.json.
+const breadcrumbTrails = {
+  "empresa/index.html": { home: "../index.html", parents: [], current: "Empresa" },
+  "catalogo/index.html": { home: "../index.html", parents: [], current: "Catálogo" },
+  "catalogo/solucao-exemplo/index.html": { home: "../../index.html", parents: [{ href: "../index.html", label: "Catálogo" }], current: "[[PRODUTO.NOME]]" },
+  "servicos/capacidade-exemplo/index.html": { home: "../../index.html", parents: [], current: "[[SERVICO.NOME]]" },
+  "contato/index.html": { home: "../index.html", parents: [], current: "Contato técnico" },
+};
+
+function channel(value) {
+  const ratio = value / 255;
+  return ratio <= 0.04045 ? ratio / 12.92 : ((ratio + 0.055) / 1.055) ** 2.4;
+}
+function luminance(hex) {
+  const [r, g, b] = [1, 3, 5].map((index) => channel(Number.parseInt(hex.slice(index, index + 2), 16)));
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+function contrast(foreground, background) {
+  const [light, dark] = [luminance(foreground), luminance(background)].sort((a, b) => b - a);
+  return (light + 0.05) / (dark + 0.05);
+}
+function token(css, name) {
+  const value = css.match(new RegExp(`${name}\\s*:\\s*(#[0-9a-f]{6})`, "i"))?.[1];
+  assert.ok(value, `${name} is a six-digit hex token`);
+  return value;
+}
+
+test("inner routes expose one semantic breadcrumb with exact relative structure", () => {
+  for (const [file, trail] of Object.entries(breadcrumbTrails)) {
+    const html = readFileSync(file, "utf8");
+    const navs = [...html.matchAll(/<nav class="breadcrumb data" aria-label="Navegação estrutural">([\s\S]*?)<\/nav>/g)];
+    assert.equal(navs.length, 1, `${file}: exactly one breadcrumb nav`);
+    const inner = navs[0][1];
+    assert.match(inner, /<span class="visually-hidden">\s*Você está em:\s*<\/span>/, `${file}: screen-reader context`);
+    assert.equal((inner.match(/<ol>/g) ?? []).length, 1, `${file}: ordered list`);
+    const links = [...inner.matchAll(/<a href="([^"]+)">([^<]+)<\/a>/g)].map((match) => ({ href: match[1], label: match[2].trim() }));
+    assert.deepEqual(links, [{ href: trail.home, label: "Início" }, ...trail.parents.map(({ href, label }) => ({ href, label }))], `${file}: breadcrumb links`);
+    for (const { href } of links) assert.equal(existsSync(resolve(dirname(file), href)), true, `${file}: ${href} resolves`);
+    const currents = [...inner.matchAll(/<span aria-current="page">([^<]+)<\/span>/g)].map((match) => match[1].trim());
+    assert.deepEqual(currents, [trail.current], `${file}: single current item`);
+    assert.doesNotMatch(inner, /<a[^>]*aria-current="page"/, `${file}: breadcrumb adds no current-page anchor`);
+    assert.doesNotMatch(html, /<p class="data">\s*Início \//, `${file}: no breadcrumb-like paragraph remains`);
+  }
+});
+
+test("capability and product heroes carry their fixed conversion and orientation contracts", () => {
+  const capability = readFileSync("servicos/capacidade-exemplo/index.html", "utf8");
+  assert.match(capability, /<a class="button" href="\.\.\/\.\.\/contato\/\?tipo=servico&amp;ref=\[\[SERVICO\.SLUG\]\]">\s*Solicitar avaliação desta capacidade\s*<\/a>/);
+  assert.match(capability, /<a class="button secondary" href="#processo-capacidade">\s*Ver como funciona\s*<\/a>/);
+  assert.equal((capability.match(/id="processo-capacidade"/g) ?? []).length, 1);
+  assert.match(capability, /<section class="section surface" id="processo-capacidade" data-component="process">/);
+
+  const product = readFileSync("catalogo/solucao-exemplo/index.html", "utf8");
+  const facts = product.match(/<dl class="hero-facts">[\s\S]*?<\/dl>/);
+  assert.ok(facts, "product hero facts strip exists");
+  assert.deepEqual([...facts[0].matchAll(/<dt>\s*([^<]+?)\s*<\/dt>/g)].map((match) => match[1]), ["Material", "Dimensões", "Tolerâncias", "Tratamentos", "Documentação"]);
+  assert.deepEqual([...facts[0].matchAll(/<dd>\s*([^<]+?)\s*<\/dd>/g)].map((match) => match[1]), Array.from({ length: 5 }, () => "[[A CONFIRMAR]]"));
+  assert.match(product, /<a class="button" href="\.\.\/\.\.\/contato\/\?tipo=produto&amp;ref=\[\[PRODUTO\.SLUG\]\]">\s*Solicitar avaliação desta solução\s*<\/a>/);
+  assert.match(product, /<a class="button secondary" href="\.\.\/">\s*Voltar ao catálogo\s*<\/a>/);
+  const heroActions = product.match(/<div class="actions">[\s\S]*?<\/div>/)[0];
+  assert.equal((heroActions.match(/class="button"/g) ?? []).length, 1, "one solid hero action");
+});
+
+test("contact declares the no-JavaScript boundary before the inert control", () => {
+  const html = readFileSync("contato/index.html", "utf8");
+  assert.match(html, /<noscript class="notice">\s*<p>\s*A validação assistida requer JavaScript\. Use um canal direto verificado\.\s*<\/p>\s*<\/noscript>\s*<button class="button" type="button" data-form-submit>/);
+  assert.equal((html.match(/<noscript/g) ?? []).length, 1);
+  assert.doesNotMatch(html, /<noscript[\s\S]*?<a\b[\s\S]*?<\/noscript>/, "no link or fake channel inside the notice");
+});
+
+test("dark stages keep a scoped, readable secondary action", () => {
+  const components = readFileSync("styles/components.css", "utf8");
+  const tokens = readFileSync("styles/tokens.css", "utf8");
+  for (const selector of [".hero.dark .button.secondary", ".hero.dark .button.secondary:hover", ".hero.dark .button.secondary:active"]) {
+    assert.ok(components.includes(selector), `${selector} is scoped`);
+  }
+  assert.match(components, /\.button\.secondary \{\s*background: transparent;\s*color: var\(--color-primary\);/, "global light secondary is preserved");
+  const dark = token(tokens, "--color-dark");
+  assert.ok(contrast(token(tokens, "--color-paper"), dark) >= 4.5, "dark secondary label contrast");
+  assert.ok(contrast(token(tokens, "--color-paper"), dark) >= 3, "dark secondary boundary contrast");
+  assert.ok(contrast(token(tokens, "--color-surface-strong"), dark) >= 4.5, "dark secondary active label contrast");
+});
+
 test("active docs do not revive generation and final guides/resources exist", () => {
   for (const path of requiredDocs) assert.equal(existsSync(path), true, path);
   for (const path of readActiveFiles()) assert.doesNotMatch(readFileSync(path, "utf8"), forbiddenActiveInstructions, `${path}: inactive generator/config instruction`);

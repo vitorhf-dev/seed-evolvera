@@ -92,6 +92,44 @@ test("six pages render locally without JavaScript at all foundation widths", asy
   }
 });
 
+test("Contact states the no-JavaScript boundary directly before the inert control", async () => {
+  const origin = await listen();
+  const browser = await chromium.launch({ headless: true });
+  const context = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+    javaScriptEnabled: false,
+    reducedMotion: "reduce",
+  });
+  const page = await context.newPage();
+
+  try {
+    await page.goto(origin + "/contato/", { waitUntil: "load" });
+    const notice = await page.evaluate(() => {
+      const control = document.querySelector("[data-form-submit]");
+      const element = document.querySelector("form[data-inquiry-form] .notice");
+      if (!control || !element) return null;
+      const box = element.getBoundingClientRect();
+      return {
+        text: element.textContent.trim(),
+        visible: box.width > 0 && box.height > 0,
+        precedesControl: Boolean(element.compareDocumentPosition(control) & Node.DOCUMENT_POSITION_FOLLOWING),
+        links: element.querySelectorAll("a").length,
+      };
+    });
+
+    assert.deepEqual(notice, {
+      text: "A validação assistida requer JavaScript. Use um canal direto verificado.",
+      visible: true,
+      precedesControl: true,
+      links: 0,
+    });
+  } finally {
+    await context.close();
+    await browser.close();
+    await new Promise((resolve) => server.close(resolve));
+  }
+});
+
 test("Home mobile first viewport and native no-JS navigation remain complete", async () => {
   const origin = await listen();
   const browser = await chromium.launch({ headless: true });
