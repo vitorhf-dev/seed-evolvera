@@ -14,7 +14,7 @@
     "test:server": "node --test --test-concurrency=1 tests/server.test.mjs",
     "test:browser": "node --max-old-space-size=768 --test --test-concurrency=1 tests/browser-foundation.test.mjs tests/browser-interactions.test.mjs",
     "test:interactions": "node --max-old-space-size=768 --test --test-concurrency=1 tests/browser-interactions.test.mjs",
-    "check": "npm test"
+    "check": "npm run test:structure && npm run test:browser"
   },
   "devDependencies": {
     "playwright": "^1.61.1"
