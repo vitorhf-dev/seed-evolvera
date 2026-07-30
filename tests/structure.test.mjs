@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 
 const expectedPages = [
@@ -42,6 +42,18 @@ const expectedPages = [
   },
 ];
 
+const runtimeModules = [
+  "scripts/main.js",
+  "scripts/mobile-nav.js",
+  "scripts/scroll-lock.js",
+  "scripts/catalog-filter.js",
+  "scripts/gallery.js",
+  "scripts/faq.js",
+  "scripts/reveal.js",
+  "scripts/video.js",
+  "scripts/inquiry-form.js",
+];
+
 const shellMarkers = [
   "<!-- SHELL:HEADER START -->",
   "<!-- SHELL:HEADER END -->",
@@ -59,7 +71,10 @@ function currentLinks(html) {
 test("fixed route, section, shell and current-page inventories agree", () => {
   const blueprint = JSON.parse(readFileSync("blueprint.json", "utf8"));
   assert.equal(blueprint.drivesGeneration, false);
-  assert.deepEqual(blueprint.runtimeModules, []);
+  assert.deepEqual(blueprint.runtimeModules, runtimeModules);
+  assert.deepEqual(runtimeModules.filter((path) => existsSync(path)), runtimeModules, "runtime module files exist");
+  const filesystemModules = readdirSync("scripts").filter((file) => file.endsWith(".js")).map((file) => `scripts/${file}`).sort();
+  assert.deepEqual([...runtimeModules].sort(), filesystemModules, "runtime manifest matches scripts inventory");
 
   for (const expected of expectedPages) {
     assert.equal(existsSync(expected.file), true, expected.file);
@@ -87,10 +102,20 @@ test("fixed route, section, shell and current-page inventories agree", () => {
   }
 });
 
-test("foundation contains no active scripts or remote resource schemes", () => {
+test("pages use exactly one depth-correct owned local module entry", () => {
   for (const { file } of expectedPages) {
     const html = readFileSync(file, "utf8");
-    assert.doesNotMatch(html, /<script\b/i, `${file}: active script`);
+    const scripts = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)];
+    assert.equal(scripts.length, 1, `${file}: exactly one script`);
+    const attributes = scripts[0][1];
+    assert.match(attributes, /\btype="module"/i, `${file}: module type`);
+    assert.match(attributes, /\bsrc="([^"]+)"/i, `${file}: local src`);
+    assert.equal(scripts[0][2].trim(), "", `${file}: no inline script`);
+    const source = attributes.match(/\bsrc="([^"]+)"/i)[1];
+    assert.doesNotMatch(source, /^(?:https?:)?\/\//i, `${file}: remote script`);
+    assert.equal(resolve(dirname(file), source), resolve("scripts/main.js"), `${file}: depth-correct entry`);
+    assert.doesNotMatch(html, /<script\b[^>]*\bsrc=["'](?:https?:)?\/\//i, `${file}: remote script`);
+    assert.doesNotMatch(html, /<script\b(?![^>]*\bsrc=)/i, `${file}: inline script`);
     assert.doesNotMatch(html, /(?:href|src|poster|action)\s*=\s*["'](?:https?:)?\/\//i, `${file}: remote resource`);
 
     for (const match of html.matchAll(/(?:href|src|poster)="([^"]+)"/g)) {

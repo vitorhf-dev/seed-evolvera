@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="../../styles/tokens.css">
     <link rel="stylesheet" href="../../styles/base.css">
     <link rel="stylesheet" href="../../styles/components.css">
+    <script type="module" src="../../scripts/main.js"></script>
   </head>
   <body data-page="produto">
     <a class="skip-link" href="#conteudo">
@@ -49,7 +50,7 @@
           <summary>
             Menu
           </summary>
-          <nav aria-label="Navegação principal móvel">
+          <nav id="mobile-nav-panel" aria-label="Navegação principal móvel">
             <a href="../../index.html">
               Início
             </a>
@@ -255,17 +256,17 @@
           </div>
         </div>
       </section>
-      <section class="section" data-component="gallery">
+      <section class="section" data-component="gallery" data-gallery-section>
         <div class="container">
           <h2>
             Vistas e detalhes
           </h2>
           <div class="grid three gallery">
-            <a href="../../assets/diagrams/material-stack.svg">
+            <a href="../../assets/diagrams/material-stack.svg" data-gallery-item>
               <img src="../../assets/diagrams/material-stack.svg" alt="Diagrama neutro de camadas, marcado para substituição" width="640" height="420">
               Abrir vista: camadas
             </a>
-            <a href="../../assets/diagrams/dimension-guide.svg">
+            <a href="../../assets/diagrams/dimension-guide.svg" data-gallery-item>
               <img src="../../assets/diagrams/dimension-guide.svg" alt="Guia neutro de dimensões, marcado para substituição" width="640" height="420">
               Abrir vista: dimensões
             </a>

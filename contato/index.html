@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="../styles/tokens.css">
     <link rel="stylesheet" href="../styles/base.css">
     <link rel="stylesheet" href="../styles/components.css">
+    <script type="module" src="../scripts/main.js"></script>
   </head>
   <body data-page="contato">
     <a class="skip-link" href="#conteudo">
@@ -49,7 +50,7 @@
           <summary>
             Menu
           </summary>
-          <nav aria-label="Navegação principal móvel">
+          <nav id="mobile-nav-panel" aria-label="Navegação principal móvel">
             <a href="../index.html">
               Início
             </a>
@@ -113,7 +114,7 @@
             <p>
               Use dados profissionais e não inclua informações sensíveis desnecessárias.
             </p>
-            <form aria-label="Solicitação de avaliação técnica">
+            <form aria-label="Solicitação de avaliação técnica" data-inquiry-form novalidate>
               <p>
                 Campos marcados com * são obrigatórios.
               </p>
@@ -122,61 +123,71 @@
                   Tipo de solicitação *
                 </legend>
                 <label>
-                  <input type="radio" name="tipo" required>
+                  <input id="inquiryType" type="radio" name="inquiryType" value="produto" required>
                   Avaliação de produto/solução
                 </label>
                 <br>
                 <label>
-                  <input type="radio" name="tipo">
+                  <input id="inquiryType-servico" type="radio" name="inquiryType" value="servico">
                   Avaliação de serviço/capacidade
                 </label>
                 <br>
                 <label>
-                  <input type="radio" name="tipo">
+                  <input id="inquiryType-geral" type="radio" name="inquiryType" value="geral">
                   Contato técnico geral
                 </label>
               </fieldset>
               <div class="form-grid two-col">
                 <label class="field">
                   Nome *
-                  <input name="nome" autocomplete="name" required placeholder="Seu nome">
+                  <input id="name" name="name" autocomplete="name" required placeholder="Seu nome">
                 </label>
                 <label class="field">
                   Empresa *
-                  <input name="empresa" autocomplete="organization" required placeholder="Nome da empresa">
+                  <input id="company" name="company" autocomplete="organization" required placeholder="Nome da empresa">
                 </label>
                 <label class="field">
                   E-mail profissional
-                  <input type="email" name="email" autocomplete="email" placeholder="nome@empresa.com">
+                  <input id="email" type="email" name="email" autocomplete="email" inputmode="email" placeholder="nome@empresa.com">
                 </label>
                 <label class="field">
                   Telefone
-                  <input type="tel" name="telefone" autocomplete="tel" placeholder="(00) 00000-0000">
+                  <input id="phone" type="tel" name="phone" autocomplete="tel" inputmode="tel" placeholder="(00) 00000-0000">
                 </label>
               </div>
               <label class="field">
                 Produto, família ou serviço de referência
-                <input name="referencia" placeholder="Ex.: [[referência do catálogo]]">
+                <input id="reference" name="reference" placeholder="Ex.: [[referência do catálogo]]">
               </label>
               <label class="field">
                 Aplicação ou contexto de uso *
-                <textarea name="aplicacao" required placeholder="Descreva onde e como a solução será utilizada.">
+                <textarea id="application" name="application" required placeholder="Descreva onde e como a solução será utilizada.">
                 </textarea>
               </label>
               <label class="field">
                 Material ou referência
-                <input name="material" placeholder="Material, classe, código ou a definir.">
+                <input id="material" name="material" placeholder="Material, classe, código ou a definir.">
               </label>
               <label class="field">
                 Dimensões e tolerâncias
-                <input name="dimensoes" placeholder="Informe unidades e critérios críticos.">
+                <input id="dimensions" name="dimensions" placeholder="Informe unidades e critérios críticos.">
+              </label>
+              <label class="field">
+                Tratamentos, normas ou documentação
+                <input id="standards" name="standards" placeholder="Cite código e revisão quando houver.">
+              </label>
+              <label class="field">
+                Quantidade ou volume de referência
+                <input id="quantity" name="quantity" placeholder="Informe a unidade; não implica disponibilidade ou preço.">
               </label>
               <label class="field">
                 Mensagem técnica *
-                <textarea name="mensagem" required placeholder="Inclua requisitos obrigatórios, preferências, dúvidas e dados pendentes.">
+                <textarea id="message" name="message" required placeholder="Inclua requisitos obrigatórios, preferências, dúvidas e dados pendentes.">
                 </textarea>
               </label>
-              <button class="button" type="button">
+              <div class="form-status" data-form-status role="status" aria-live="polite"></div>
+              <div class="error-summary" data-error-summary role="alert" tabindex="-1" hidden></div>
+              <button class="button" type="button" data-form-submit>
                 Validar e preparar solicitação
               </button>
             </form>

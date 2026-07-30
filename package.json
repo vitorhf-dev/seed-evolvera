@@ -9,10 +9,11 @@
   },
   "scripts": {
     "serve": "node tools/serve.mjs",
-    "test": "node --test tests/*.test.mjs",
-    "test:structure": "node --test tests/structure.test.mjs",
-    "test:server": "node --test tests/server.test.mjs",
-    "test:browser": "node --test tests/browser-foundation.test.mjs",
+    "test": "npm run test:structure && npm run test:browser",
+    "test:structure": "node --test --test-concurrency=1 tests/structure.test.mjs tests/server.test.mjs",
+    "test:server": "node --test --test-concurrency=1 tests/server.test.mjs",
+    "test:browser": "node --max-old-space-size=768 --test --test-concurrency=1 tests/browser-foundation.test.mjs tests/browser-interactions.test.mjs",
+    "test:interactions": "node --max-old-space-size=768 --test --test-concurrency=1 tests/browser-interactions.test.mjs",
     "check": "npm test"
   },
   "devDependencies": {

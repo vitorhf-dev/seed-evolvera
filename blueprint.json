@@ -126,7 +126,45 @@
     "local media",
     "contact and legal channels"
   ],
-  "runtimeModules": [],
+  "runtimeModules": [
+    "scripts/main.js",
+    "scripts/mobile-nav.js",
+    "scripts/scroll-lock.js",
+    "scripts/catalog-filter.js",
+    "scripts/gallery.js",
+    "scripts/faq.js",
+    "scripts/reveal.js",
+    "scripts/video.js",
+    "scripts/inquiry-form.js"
+  ],
+  "runtime": {
+    "entry": "scripts/main.js",
+    "enhancements": [
+      "mobile-nav",
+      "scroll-lock",
+      "catalog-filter",
+      "gallery-dialog",
+      "faq-details",
+      "safe-reveal",
+      "local-video",
+      "inquiry-form"
+    ],
+    "fallbacks": [
+      "native details navigation",
+      "authored catalog cards remain visible",
+      "local linked gallery images",
+      "native details FAQ",
+      "static content remains visible",
+      "direct inquiry channels and preserved values"
+    ],
+    "invariants": [
+      "dependency-free ES modules",
+      "owned local scripts only",
+      "fail-open progressive enhancement",
+      "no transport/navigation/storage/analytics",
+      "no fake submission result"
+    ]
+  },
   "mediaContracts": {
     "modes": {
       "media-rich": "Verified local media fills the component media region.",

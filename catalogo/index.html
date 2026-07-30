@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="../styles/tokens.css">
     <link rel="stylesheet" href="../styles/base.css">
     <link rel="stylesheet" href="../styles/components.css">
+    <script type="module" src="../scripts/main.js"></script>
   </head>
   <body data-page="catalogo">
     <a class="skip-link" href="#conteudo">
@@ -49,7 +50,7 @@
           <summary>
             Menu
           </summary>
-          <nav aria-label="Navegação principal móvel">
+          <nav id="mobile-nav-panel" aria-label="Navegação principal móvel">
             <a href="../index.html">
               Início
             </a>
@@ -110,22 +111,29 @@
       </section>
       <section class="section" data-component="filter">
         <div class="container">
-          <div class="filter">
+          <div class="filter" data-catalog-filter>
             <h2>
               Filtrar famílias
             </h2>
             <p>
               Todos os itens estão visíveis. Ative JavaScript para filtrar nesta página.
             </p>
-            <button type="button" aria-pressed="true">
-              Todas
-            </button>
-            <button type="button">
-              [[CATEGORIA 01]]
-            </button>
-            <p aria-live="polite">
-              6 famílias no catálogo
+            <div class="filter-controls" role="group" aria-label="Filtrar famílias por categoria">
+              <button type="button" data-filter="all" aria-pressed="true">
+                Todas
+              </button>
+              <button type="button" data-filter="category-01" aria-pressed="false">
+                [[CATEGORIA 01]]
+              </button>
+              <button type="button" data-filter="category-02" aria-pressed="false">
+                [[CATEGORIA 02]]
+              </button>
+            </div>
+            <p data-filter-count aria-live="polite">
+              6 famílias encontradas
             </p>
+            <button type="button" data-filter-reset hidden>Limpar filtros</button>
+            <p data-filter-empty hidden>Nenhuma família corresponde aos filtros.</p>
           </div>
         </div>
       </section>
@@ -135,7 +143,7 @@
             Famílias de exemplo para substituição
           </h2>
           <div class="grid three">
-            <article class="card no-media">
+            <article class="card no-media" data-catalog-card data-category="category-01">
               <p class="eyebrow">
                 [[CATEGORIA]]
               </p>
@@ -175,7 +183,7 @@
                 Consultar detalhes
               </a>
             </article>
-            <article class="card no-media">
+            <article class="card no-media" data-catalog-card data-category="category-01">
               <p class="eyebrow">
                 [[CATEGORIA]]
               </p>
@@ -215,7 +223,7 @@
                 Consultar detalhes
               </a>
             </article>
-            <article class="card no-media">
+            <article class="card no-media" data-catalog-card data-category="category-01">
               <p class="eyebrow">
                 [[CATEGORIA]]
               </p>
@@ -255,7 +263,7 @@
                 Consultar detalhes
               </a>
             </article>
-            <article class="card no-media">
+            <article class="card no-media" data-catalog-card data-category="category-02">
               <p class="eyebrow">
                 [[CATEGORIA]]
               </p>
@@ -295,7 +303,7 @@
                 Consultar detalhes
               </a>
             </article>
-            <article class="card no-media">
+            <article class="card no-media" data-catalog-card data-category="category-02">
               <p class="eyebrow">
                 [[CATEGORIA]]
               </p>
@@ -335,7 +343,7 @@
                 Consultar detalhes
               </a>
             </article>
-            <article class="card no-media">
+            <article class="card no-media" data-catalog-card data-category="category-02">
               <p class="eyebrow">
                 [[CATEGORIA]]
               </p>
