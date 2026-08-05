@@ -30,8 +30,8 @@ npm run check             # same complete aggregate
 
 ## Source map and 90/10 boundary
 
-- `styles/tokens.css` — semantic identity/color, type, spacing and motion tokens.
-- `styles/base.css` and `styles/components.css` — stable layout, component, media and accessibility contracts.
+- `styles/tokens.css` — semantic identity/color, type, spacing, radius, elevation and motion tokens.
+- `styles/base.css` and `styles/components.css` — stable layout, asset-optional hero, component, media and accessibility contracts.
 - `scripts/` — progressive enhancements for navigation, filters, gallery, FAQ, reveal, video and inquiry validation.
 - `assets/diagrams/` — local neutral technical diagrams; `blueprint.json` — descriptive inventory only, never the sole oracle or a generator input.
 - `tools/serve.mjs` — read-only static serving; `tests/` — fixed structural, server and browser contracts.

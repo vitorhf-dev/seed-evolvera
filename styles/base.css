@@ -11,7 +11,8 @@ body {
   margin: 0;
   background: var(--color-paper);
   color: var(--color-ink);
-  font: 16px/1.65 var(--font-sans);
+  font: 16px/1.62 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
 }
 
 img, svg {
@@ -37,32 +38,40 @@ a:active {
   color: var(--color-primary-active);
 }
 
+/* The frozen amber token alone reaches only 1.78:1 on paper, so the ring is composed with a dark outer halo. */
 :focus-visible {
   outline: 3px solid var(--color-focus);
   outline-offset: 2px;
+  box-shadow: var(--shadow-focus);
 }
 
 h1, h2, h3, p {
   margin-top: 0;
 }
 
+/* Adaptation markers are long unbreakable tokens, so headings must wrap inside the mobile measure. */
 h1, h2, h3 {
-  line-height: 1.1;
+  overflow-wrap: break-word;
 }
 
 h1 {
-  font-size: clamp(2.5rem,6vw,4.5rem);
-  letter-spacing: -.04em;
-  max-width: 16ch;
+  font-size: clamp(2.5rem,5.4vw,4.25rem);
+  line-height: 1.04;
+  letter-spacing: -.03em;
+  max-width: 15ch;
 }
 
 h2 {
-  font-size: clamp(1.9rem,4vw,3rem);
+  font-size: clamp(1.9rem,3.6vw,2.75rem);
+  line-height: 1.12;
+  letter-spacing: -.02em;
   max-width: 22ch;
 }
 
 h3 {
-  font-size: clamp(1.3rem,2vw,1.625rem);
+  font-size: clamp(1.25rem,1.8vw,1.5rem);
+  line-height: 1.25;
+  letter-spacing: -.01em;
 }
 
 p {
@@ -92,6 +101,30 @@ p {
 
 .eyebrow, .index {
   color: var(--color-accent);
+}
+
+/* The light accent fails AA on the dark stages, so those stages switch to the dark-safe accent. */
+.hero.dark .eyebrow,
+.hero.dark .index,
+.proof-rail .eyebrow,
+.proof-rail .index,
+.dark-band .eyebrow,
+.dark-band .index,
+.cta-band .eyebrow,
+.cta-band .index,
+.panel .eyebrow,
+.panel .index,
+.site-footer .eyebrow,
+.site-footer .index {
+  color: var(--color-accent-on-dark);
+}
+
+.hero.dark .data,
+.dark-band .data,
+.cta-band .data,
+.panel .data,
+.site-footer .data {
+  color: var(--color-surface-strong);
 }
 
 .lead {
@@ -175,9 +208,19 @@ ul, ol {
   }
 }
 
+@media (min-width:1024px) {
+  .section > .container > .section-head p,
+  .section > .container > p {
+    max-width: min(72ch,calc(var(--container) / 12 * 8));
+  }
+}
+
 @media (min-width:1280px) {
   .container {
     width: min(var(--container),calc(100% - 96px));
+  }
+  .section {
+    padding-block: var(--space-11);
   }
 }
 

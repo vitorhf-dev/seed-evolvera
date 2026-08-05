@@ -92,6 +92,50 @@ test("six pages render locally without JavaScript at all foundation widths", asy
   }
 });
 
+test("canonical no-media heroes reserve one grid column at tablet and desktop widths", async () => {
+  const origin = await listen();
+  const browser = await chromium.launch({ headless: true });
+
+  try {
+    for (const width of [768, 1440]) {
+      for (const route of routes) {
+        const context = await browser.newContext({
+          viewport: { width, height: 844 },
+          javaScriptEnabled: false,
+          reducedMotion: "reduce",
+        });
+        const page = await context.newPage();
+        await page.route("**/*", async (requestRoute) => {
+          const url = new URL(requestRoute.request().url());
+          if (url.hostname !== "127.0.0.1") {
+            await requestRoute.abort("blockedbyclient");
+            return;
+          }
+          await requestRoute.continue();
+        });
+        await page.goto(origin + route, { waitUntil: "load" });
+        const layout = await page.locator(".hero-grid").evaluate((heroGrid) => {
+          const style = getComputedStyle(heroGrid);
+          const tracks = style.gridTemplateColumns.trim().split(/\s+/).filter(Boolean);
+          const rail = heroGrid.querySelector(":scope > .hero-media--editorial");
+          return {
+            trackCount: tracks.length,
+            railHeight: rail?.getBoundingClientRect().height ?? 0,
+            railDisplay: rail ? getComputedStyle(rail).display : "missing",
+          };
+        });
+        assert.equal(layout.trackCount, 1, `${route} at ${width}px has no reserved media column`);
+        assert.ok(layout.railHeight <= 64, `${route} at ${width}px editorial rail stays compact`);
+        assert.notEqual(layout.railDisplay, "none", `${route} at ${width}px keeps the editorial rail`);
+        await context.close();
+      }
+    }
+  } finally {
+    await browser.close();
+    await new Promise((resolve) => server.close(resolve));
+  }
+});
+
 test("Contact states the no-JavaScript boundary directly before the inert control", async () => {
   const origin = await listen();
   const browser = await chromium.launch({ headless: true });

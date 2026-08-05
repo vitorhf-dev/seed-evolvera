@@ -167,9 +167,9 @@
   },
   "mediaContracts": {
     "modes": {
-      "media-rich": "Verified local media fills the component media region.",
-      "media-light": "One verified local asset appears as an inset figure with caption.",
-      "no-media": "Media leaves layout and accessibility flow; editorial content expands without an empty frame."
+      "media-rich": "Optional verified local media fills the prescribed component region when supplied, with factual dimensions and context.",
+      "media-light": "Optional verified local media appears as a contained, captioned inset plate; it never becomes a requirement for the page.",
+      "no-media": "Canonical media-free mode: no media column is reserved; the editorial index rail carries the copy-first composition, and failed media collapses back to it without an empty frame."
     },
     "heroVariants": [
       "image",

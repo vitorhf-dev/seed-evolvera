@@ -100,6 +100,25 @@ test("semantic token/color authority, media contracts and static package are fix
   const lock = JSON.parse(readFileSync("package-lock.json", "utf8"));
   const semanticColors = { "--color-ink": "#142126", "--color-paper": "#fcfcf8", "--color-primary": "#0c5967", "--color-focus": "#f2b544" };
   for (const [role, value] of Object.entries(semanticColors)) assert.match(tokens, new RegExp(`${role}\\s*:\\s*${value}`));
+  for (const name of ["--radius-0", "--radius-xs", "--radius-sm", "--radius-md", "--radius-lg", "--radius-xl", "--radius-pill", "--color-line-strong", "--color-accent-on-dark", "--shadow-raised", "--shadow-lifted", "--shadow-focus"]) {
+    assert.match(tokens, new RegExp(`${name}\\s*:`), `${name} is declared`);
+  }
+  for (const name of ["--radius-0", "--radius-xs", "--radius-sm", "--radius-md", "--radius-lg", "--radius-pill"]) {
+    assert.match(components, new RegExp(`var\\(${name}\\)`), `${name} is used by components`);
+  }
+  assert.match(components, /var\(--shadow-raised\)/, "raised elevation is used");
+  assert.match(components, /var\(--shadow-lifted\)/, "lifted elevation is used");
+  assert.match(base, /box-shadow:\s*var\(--shadow-focus\)/, "focus halo is applied");
+  const dark = token(tokens, "--color-dark");
+  const darkSoft = token(tokens, "--color-dark-soft");
+  const accentOnDark = token(tokens, "--color-accent-on-dark");
+  const lineStrong = token(tokens, "--color-line-strong");
+  assert.ok(contrast(accentOnDark, dark) >= 4.5, "dark-stage accent contrast");
+  assert.ok(contrast(accentOnDark, darkSoft) >= 4.5, "dark-soft accent contrast");
+  assert.ok(contrast(lineStrong, token(tokens, "--color-paper")) >= 3, "control boundary contrast on paper");
+  assert.ok(contrast(lineStrong, dark) >= 3, "control boundary contrast on dark");
+  assert.match(components, /\.hero-grid\s*\{[\s\S]*?grid-template-columns:\s*minmax\(0,1fr\)/, "no-media hero starts as one column");
+  assert.match(components, /\.hero-grid:has\(> \.hero-media--(?:image|product|diagram|video):not\(\.no-media\)\)/, "media columns are opt-in");
   assert.doesNotMatch(base, /#[0-9a-f]{3,8}\b|rgba?\(/i);
   assert.doesNotMatch(components, /#[0-9a-f]{3,8}\b|rgba?\(/i);
   for (const contract of [".media-rich", ".media-light", ".no-media", ".hero-media--image", ".hero-media--video", ".hero-media--product", ".hero-media--diagram", ".hero-media--editorial"]) assert.match(components, new RegExp(`\\${contract}`));

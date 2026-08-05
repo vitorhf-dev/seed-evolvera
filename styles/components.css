@@ -1,6 +1,7 @@
 .site-header {
   border-bottom: var(--border);
   background: var(--color-paper);
+  box-shadow: var(--shadow-raised);
 }
 
 .header-inner {
@@ -12,15 +13,25 @@
 }
 
 .brand {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
   color: var(--color-ink);
   text-decoration: none;
   font-weight: 700;
+  letter-spacing: -.01em;
   line-height: 1.1;
 }
 
 .brand small {
   display: block;
+  width: fit-content;
+  padding-top: 4px;
+  border-top: var(--border);
   font: 700 .65rem var(--font-mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
   color: var(--color-ink-soft);
   margin-top: 4px;
 }
@@ -37,13 +48,20 @@
   align-items: center;
   min-height: 44px;
   padding: 8px 10px;
+  border-radius: var(--radius-sm);
   color: var(--color-ink);
   text-decoration: none;
-  font-weight: 700;
+  font-weight: 600;
+  transition: background-color var(--motion-fast) var(--ease-standard);
+}
+
+.nav a:hover {
+  background: var(--color-surface);
 }
 
 .nav a[aria-current=page] {
-  border-bottom: 3px solid var(--color-accent);
+  background: var(--color-surface);
+  box-shadow: inset 0 -3px 0 0 var(--color-accent);
 }
 
 .button {
@@ -51,12 +69,14 @@
   align-items: center;
   justify-content: center;
   min-height: 48px;
-  padding: 12px 20px;
+  padding: 12px 24px;
   border: 1px solid var(--color-primary);
+  border-radius: var(--radius-pill);
   background: var(--color-primary);
   color: var(--color-paper);
-  font-weight: 700;
+  font-weight: 600;
   text-decoration: none;
+  transition: background-color var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard);
 }
 
 .button:hover {
@@ -71,6 +91,20 @@
 .button.secondary {
   background: transparent;
   color: var(--color-primary);
+  border-color: var(--color-line-strong);
+}
+
+.button.secondary:hover {
+  background: var(--color-surface);
+  color: var(--color-primary-hover);
+}
+
+.button[aria-disabled="true"],
+.button:disabled {
+  border: var(--border-control);
+  background: var(--color-surface);
+  color: var(--color-disabled);
+  cursor: not-allowed;
 }
 
 /* Dark stages invert only the secondary action: the solid primary stays the single strongest CTA. */
@@ -169,7 +203,7 @@
 
 .hero-facts dt {
   font: 700 .75rem/1.4 var(--font-mono);
-  letter-spacing: .1em;
+  letter-spacing: .08em;
   text-transform: uppercase;
   color: var(--color-ink-soft);
 }
@@ -184,7 +218,7 @@ noscript.notice {
 }
 
 .hero {
-  padding-block: clamp(64px,9vw,128px);
+  padding-block: clamp(40px,8vw,112px);
 }
 
 .hero.dark, .dark-band, .site-footer, .cta-band {
@@ -192,18 +226,24 @@ noscript.notice {
   color: var(--color-paper);
 }
 
+/* The radius law: full-bleed stages stay square so rounded surfaces and pill actions read as deliberate. */
+.hero, .proof-rail, .dark-band, .cta-band, .site-header, .site-footer {
+  border-radius: var(--radius-0);
+}
+
+/* Single column is the base composition: nothing is reserved for media that may not exist. */
 .hero-grid {
   display: grid;
+  grid-template-columns: minmax(0,1fr);
+  align-items: start;
   gap: 40px;
 }
 
+/* Decorative blueprint backdrop utility: a section-level texture, never a boxed column child. */
 .technical-field {
-  min-height: 240px;
-  border-top: 1px solid var(--color-line);
-  border-bottom: 1px solid var(--color-line);
-  padding: 24px;
-  background-image: linear-gradient(var(--color-dark-soft) 1px,transparent 1px),linear-gradient(90deg,var(--color-dark-soft) 1px,transparent 1px);
+  background-image: linear-gradient(var(--color-line) 1px,transparent 1px),linear-gradient(90deg,var(--color-line) 1px,transparent 1px);
   background-size: 32px 32px;
+  background-position: right bottom;
 }
 
 .media-rich {
@@ -219,7 +259,8 @@ noscript.notice {
   display: block;
   width: 100%;
   height: auto;
-  border: var(--border);
+  border: var(--border-control);
+  border-radius: var(--radius-lg);
   background: var(--color-surface);
 }
 
@@ -228,7 +269,8 @@ noscript.notice {
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-4);
-  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-tint);
 }
 
 .media-light > picture,
@@ -246,38 +288,121 @@ noscript.notice {
 }
 
 .hero-media {
-  align-self: stretch;
+  align-self: start;
 }
 
-.hero-media--image img,
-.hero-media--video video,
-.hero-media--product img,
-.hero-media--diagram svg {
+/* All four media variants size img, picture, svg and video identically. */
+.hero-media--image :is(img, picture, svg, video),
+.hero-media--video :is(img, picture, svg, video),
+.hero-media--product :is(img, picture, svg, video),
+.hero-media--diagram :is(img, picture, svg, video) {
   display: block;
   width: 100%;
-  height: auto;
-  max-height: 32rem;
+  height: 100%;
+  max-height: none;
   object-fit: contain;
+}
+
+.hero-media--image,
+.hero-media--video,
+.hero-media--product,
+.hero-media--diagram {
+  overflow: hidden;
+  border: var(--border-control);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-raised);
+}
+
+/* A supplied photograph is framed at a fixed ratio and cropped: it can neither letterbox nor stretch the hero. */
+.hero-media--image {
+  aspect-ratio: 16 / 9;
+  max-height: min(56vh,30rem);
+  background: var(--color-surface);
+}
+
+.hero-media--image :is(img, picture, svg, video) {
+  object-fit: cover;
+  object-position: center;
+}
+
+.hero-media--product,
+.hero-media--diagram {
+  padding: var(--space-5);
+  background: var(--color-surface-tint);
+}
+
+.hero-media--product {
+  aspect-ratio: 4 / 3;
+  max-height: 22rem;
+}
+
+.hero-media--diagram {
+  aspect-ratio: 16 / 10;
+  max-height: 22rem;
+}
+
+.hero.dark .hero-media--product,
+.hero.dark .hero-media--diagram {
+  background: var(--color-plate-dark);
+}
+
+.hero-media--diagram figcaption {
+  font-size: .875rem;
+  max-width: 60ch;
+  color: var(--color-ink-soft);
+}
+
+.hero-media--video {
+  aspect-ratio: 16 / 9;
+  background: var(--color-dark-soft);
 }
 
 .hero-media--video video {
   background: var(--color-dark-soft);
 }
 
+/* The editorial default is an index rail, not a reserved field: content-bearing and never taller than 64px. */
 .hero-media--editorial {
-  display: grid;
-  align-content: space-between;
-  min-height: 15rem;
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+  max-height: 64px;
+  overflow: hidden;
+  padding-top: var(--space-3);
+  border-top: var(--border);
 }
 
-.hero.no-media .hero-media:not(.hero-media--editorial) {
+.hero-media--editorial > p {
+  margin: 0;
+}
+
+.hero-media--editorial > .index {
+  flex: none;
+}
+
+.hero-media--editorial > :not(.index) {
+  font: 700 .8125rem/1.45 var(--font-mono);
+  letter-spacing: .04em;
+  color: var(--color-ink-soft);
+}
+
+.hero.dark .hero-media--editorial {
+  border-top-color: var(--color-line-strong);
+}
+
+.hero.dark .hero-media--editorial > :not(.index) {
+  color: var(--color-surface-strong);
+}
+
+.hero.no-media .hero-media:not(.hero-media--editorial),
+.hero-media.no-media {
   display: none;
 }
 
 .proof-rail {
   background: var(--color-dark-soft);
   color: var(--color-paper);
-  padding-block: 24px;
+  padding-block: var(--space-6);
 }
 
 .proof-rail dl {
@@ -287,12 +412,14 @@ noscript.notice {
 }
 
 .proof-rail div {
-  border-left: 1px solid var(--color-line);
-  padding-left: 16px;
+  padding-left: 0;
 }
 
 .proof-rail dt {
-  font-weight: 700;
+  font: 700 .75rem/1.4 var(--font-mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--color-accent-on-dark);
 }
 
 .proof-rail dd {
@@ -304,9 +431,17 @@ noscript.notice {
   display: flex;
   flex-direction: column;
   padding: 24px;
-  border: var(--border);
-  border-top: 3px solid var(--color-primary);
+  border: var(--border-control);
+  border-radius: var(--radius-md);
   background: var(--color-paper);
+  box-shadow: var(--shadow-raised);
+  transition: box-shadow var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard);
+}
+
+.card:hover,
+.card:focus-within {
+  border-color: var(--color-ink-soft);
+  box-shadow: var(--shadow-lifted);
 }
 
 .card p {
@@ -325,8 +460,10 @@ noscript.notice {
 
 .panel {
   padding: 32px;
+  border-radius: var(--radius-lg);
   background: var(--color-dark);
   color: var(--color-paper);
+  box-shadow: var(--shadow-lifted);
 }
 
 .meta, .specs {
@@ -336,17 +473,20 @@ noscript.notice {
 .meta div, .specs div {
   display: grid;
   gap: 4px;
-  padding: 12px 0;
+  padding: 14px 0;
   border-top: var(--border);
 }
 
 .meta dt, .specs dt {
-  font-weight: 700;
+  font: 700 .75rem/1.4 var(--font-mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--color-ink-soft);
 }
 
 .meta dd, .specs dd {
   margin: 0;
-  color: var(--color-ink-soft);
+  color: var(--color-ink);
 }
 
 .process {
@@ -360,7 +500,27 @@ noscript.notice {
 .process li {
   position: relative;
   padding: 24px;
-  border-top: 2px solid var(--color-primary);
+  border: var(--border);
+  border-radius: var(--radius-md);
+  counter-increment: item;
+}
+
+/* The step ordinal is presentational: the visible step name always carries the meaning. */
+.process li::before {
+  content: counter(item,decimal-leading-zero);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  min-height: 28px;
+  margin: 0 10px 12px 0;
+  vertical-align: middle;
+  padding-inline: 10px;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  color: var(--color-primary);
+  font: 700 .75rem/1.4 var(--font-mono);
+  letter-spacing: .08em;
 }
 
 .process strong {
@@ -369,9 +529,23 @@ noscript.notice {
 }
 
 .sector {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 76px;
   padding: 20px;
-  border-left: 3px solid var(--color-accent);
+  border: var(--border-control);
+  border-radius: var(--radius-md);
   background: var(--color-paper);
+}
+
+.sector::before {
+  content: "";
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: var(--color-accent);
 }
 
 details {
@@ -382,8 +556,27 @@ summary {
   min-height: 52px;
   display: flex;
   align-items: center;
+  gap: var(--space-3);
+  padding-block: var(--space-2);
   cursor: pointer;
-  font-weight: 700;
+  font-weight: 600;
+}
+
+/* CSS-only affordance built from borders: no icon asset is introduced. */
+details:not(.mobile-nav) > summary::after {
+  content: "";
+  flex: none;
+  width: 9px;
+  height: 9px;
+  margin-left: auto;
+  border-right: 2px solid var(--color-ink-soft);
+  border-bottom: 2px solid var(--color-ink-soft);
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform var(--motion-panel) var(--ease-standard);
+}
+
+details:not(.mobile-nav)[open] > summary::after {
+  transform: translateY(2px) rotate(-135deg);
 }
 
 details p {
@@ -392,6 +585,12 @@ details p {
 
 .cta-band {
   padding-block: 64px;
+}
+
+/* A pill must keep its shape: the closing action is sized by its label, not by the grid column. */
+.cta-band .split > .button {
+  justify-self: start;
+  align-self: center;
 }
 
 .site-footer {
@@ -413,26 +612,59 @@ details p {
 .filter {
   padding: 24px;
   border: var(--border);
+  border-radius: var(--radius-md);
   background: var(--color-surface);
+  box-shadow: var(--shadow-raised);
+}
+
+.filter-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
 }
 
 .filter button {
   min-height: 44px;
-  padding: 8px 16px;
-  border: var(--border);
+  padding: 8px 18px;
+  border: var(--border-control);
+  border-radius: var(--radius-pill);
   background: var(--color-paper);
-  font-weight: 700;
+  color: var(--color-ink);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--motion-fast) var(--ease-standard), color var(--motion-fast) var(--ease-standard);
+}
+
+.filter button:hover {
+  background: var(--color-surface-tint);
+}
+
+.filter button[aria-pressed="true"] {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: var(--color-paper);
+}
+
+[data-filter-count] {
+  font: 700 .75rem/1.4 var(--font-mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--color-ink-soft);
 }
 
 .gallery a {
   display: block;
   padding: 8px;
-  border: var(--border);
+  border: var(--border-control);
+  border-radius: var(--radius-md);
   background: var(--color-paper);
+  box-shadow: var(--shadow-raised);
 }
 
 .gallery img {
   width: 100%;
+  border-radius: var(--radius-xs);
 }
 
 .form-grid {
@@ -440,19 +672,31 @@ details p {
   gap: 20px;
 }
 
+/* The label text is the .field element itself, so the mono register is set here and reset on the control. */
 .field {
   display: grid;
   gap: 6px;
+  font: 700 .75rem/1.4 var(--font-mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--color-ink-soft);
 }
 
 .field input, .field select, .field textarea {
   width: 100%;
   min-height: 48px;
-  padding: 12px;
-  border: var(--border);
+  padding: 14px;
+  border: var(--border-control);
+  border-radius: var(--radius-sm);
   background: var(--color-paper);
   color: var(--color-ink);
-  font: inherit;
+  font: 400 1rem/1.5 var(--font-sans);
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.field [aria-invalid="true"] {
+  border-color: var(--color-error);
 }
 
 .field textarea {
@@ -462,7 +706,8 @@ details p {
 .notice {
   padding: 16px;
   border-left: 4px solid var(--color-accent);
-  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-tint);
 }
 
 .mobile-nav {
@@ -488,9 +733,15 @@ details p {
   text-decoration: none;
 }
 
+.mobile-nav a {
+  padding-inline: 12px;
+  border-radius: var(--radius-sm);
+}
+
 .mobile-nav a[aria-current="page"] {
   border-left: 3px solid var(--color-accent);
   padding-left: 12px;
+  background: var(--color-surface);
 }
 
 body.js-scroll-locked {
@@ -503,9 +754,10 @@ body.js-enhanced .mobile-nav[open] {
   inset-inline: 16px;
   top: 72px;
   padding: 8px 16px 16px;
-  border: var(--border);
+  border: var(--border-control);
+  border-radius: var(--radius-lg);
   background: var(--color-paper);
-  box-shadow: var(--shadow-overlay);
+  box-shadow: var(--shadow-lifted);
 }
 
 body.js-enhanced .mobile-nav[open] nav {
@@ -528,9 +780,11 @@ body.js-enhanced .mobile-nav[open] nav {
   max-width: 100%;
   max-height: 92vh;
   padding: 0;
-  border: var(--border);
+  border: var(--border-control);
+  border-radius: var(--radius-lg);
   background: var(--color-paper);
   color: var(--color-ink);
+  box-shadow: var(--shadow-overlay);
 }
 
 .gallery-dialog::backdrop {
@@ -553,17 +807,26 @@ body.js-enhanced .mobile-nav[open] nav {
   display: block;
   width: 100%;
   max-height: 60vh;
+  border-radius: var(--radius-md);
   object-fit: contain;
 }
 
 .gallery-dialog button {
   min-height: 44px;
-  padding: 8px 12px;
-  border: var(--border);
+  padding: 8px 18px;
+  border: var(--border-control);
+  border-radius: var(--radius-pill);
   background: var(--color-paper);
   color: var(--color-ink);
   font: inherit;
-  font-weight: 700;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.gallery-dialog button:disabled {
+  border-style: dashed;
+  color: var(--color-disabled);
+  cursor: not-allowed;
 }
 
 .gallery-dialog__controls {
@@ -580,6 +843,7 @@ body.js-enhanced .mobile-nav[open] nav {
 .error-summary {
   padding: 16px;
   border: 2px solid var(--color-accent);
+  border-radius: var(--radius-md);
   background: var(--color-surface);
 }
 
@@ -592,7 +856,9 @@ body.js-enhanced .mobile-nav[open] nav {
   font-weight: 700;
 }
 
+/* The script inserts this notice as a grid item, so it must not stretch into an empty column-height box. */
 .context-summary {
+  align-self: start;
   margin-bottom: 24px;
 }
 
@@ -639,18 +905,40 @@ body.js-enhanced .mobile-nav[open] nav {
     padding-inline: 7px;
     font-size: .9rem;
   }
-  .technical-field {
-    min-height: 160px;
-  }
   .card, .panel {
+    padding: 20px;
+  }
+  .filter {
     padding: 20px;
   }
 }
 
-@media (min-width:768px) {
-  .hero-grid {
-    grid-template-columns: 7fr 5fr;
+/* Two columns are opt-in: they activate only when the hero actually carries verified media. */
+@media (min-width:900px) {
+  .hero-grid:has(> .hero-media--image:not(.no-media)),
+  .hero-grid:has(> .hero-media--product:not(.no-media)),
+  .hero-grid:has(> .hero-media--diagram:not(.no-media)),
+  .hero-grid:has(> .hero-media--video:not(.no-media)) {
+    grid-template-columns: minmax(0,7fr) minmax(0,5fr);
   }
+  .hero-media--image {
+    aspect-ratio: 4 / 3;
+  }
+  .hero-grid:has(> .hero-media--image:not(.no-media)) > .hero-media--editorial,
+  .hero-grid:has(> .hero-media--product:not(.no-media)) > .hero-media--editorial,
+  .hero-grid:has(> .hero-media--diagram:not(.no-media)) > .hero-media--editorial,
+  .hero-grid:has(> .hero-media--video:not(.no-media)) > .hero-media--editorial {
+    grid-column: 1;
+  }
+}
+
+@media (min-width:1024px) {
+  .hero-grid > :first-child {
+    max-width: calc(var(--container) / 12 * 8);
+  }
+}
+
+@media (min-width:768px) {
   .split {
     grid-template-columns: 5fr 7fr;
   }
@@ -677,6 +965,10 @@ body.js-enhanced .mobile-nav[open] nav {
 @media (min-width:960px) {
   .proof-rail dl {
     grid-template-columns: repeat(4,1fr);
+  }
+  .proof-rail div + div {
+    padding-left: var(--space-5);
+    border-left: 1px solid var(--color-line-strong);
   }
   .process {
     grid-template-columns: repeat(4,1fr);

@@ -334,12 +334,21 @@ test("reveal completes every section when IntersectionObserver is unavailable", 
 
 test("video initializer requires a poster and keeps valid local video safe", async () => {
   await withPage("/", { contextOptions: { reducedMotion: "reduce" } }, async (page) => {
+    await page.setViewportSize({ width: 1440, height: 844 });
     const result = await page.evaluate(async () => {
       const { initVideo } = await import("/scripts/video.js?video-contract");
       const missingWrapper = document.createElement("div");
       missingWrapper.className = "hero-media";
       missingWrapper.innerHTML = "<video autoplay></video>";
       document.body.append(missingWrapper);
+      const failedHero = document.createElement("section");
+      failedHero.className = "hero hero--editorial no-media";
+      failedHero.innerHTML = '<div class="container hero-grid"><div>Copy remains primary.</div></div>';
+      const failedHeroWrapper = document.createElement("div");
+      failedHeroWrapper.className = "hero-media hero-media--video";
+      failedHeroWrapper.innerHTML = "<video autoplay></video>";
+      failedHero.querySelector(".hero-grid").append(failedHeroWrapper);
+      document.body.append(failedHero);
       const validWrapper = document.createElement("div");
       validWrapper.className = "hero-media";
       validWrapper.innerHTML = '<video autoplay poster="/assets/diagrams/material-stack.svg"></video>';
@@ -347,9 +356,15 @@ test("video initializer requires a poster and keeps valid local video safe", asy
       initVideo();
       const missing = missingWrapper.querySelector("video");
       const valid = validWrapper.querySelector("video");
+      const failedHeroGrid = failedHero.querySelector(".hero-grid");
+      const failedHeroTracks = getComputedStyle(failedHeroGrid).gridTemplateColumns.trim().split(/\s+/).filter(Boolean);
       return {
         missingHidden: missing.hidden,
         missingFallback: missingWrapper.classList.contains("no-media"),
+        failedHeroFallback: failedHeroWrapper.classList.contains("no-media"),
+        failedHeroWrapperHidden: getComputedStyle(failedHeroWrapper).display === "none",
+        failedHeroWrapperHasNoBox: failedHeroWrapper.getBoundingClientRect().width === 0 && failedHeroWrapper.getBoundingClientRect().height === 0,
+        failedHeroTrackCount: failedHeroTracks.length,
         validHidden: valid.hidden,
         validControls: valid.controls,
         validMuted: valid.muted,
@@ -357,7 +372,19 @@ test("video initializer requires a poster and keeps valid local video safe", asy
         validAutoplayAttribute: valid.hasAttribute("autoplay"),
       };
     });
-    assert.deepEqual(result, { missingHidden: true, missingFallback: true, validHidden: false, validControls: true, validMuted: true, validAutoplay: false, validAutoplayAttribute: false });
+    assert.deepEqual(result, {
+      missingHidden: true,
+      missingFallback: true,
+      failedHeroFallback: true,
+      failedHeroWrapperHidden: true,
+      failedHeroWrapperHasNoBox: true,
+      failedHeroTrackCount: 1,
+      validHidden: false,
+      validControls: true,
+      validMuted: true,
+      validAutoplay: false,
+      validAutoplayAttribute: false,
+    });
   });
 });
 

@@ -4,7 +4,7 @@ Bostoide consumes this repository as a persistent static blueprint. The supporte
 
 ## Copy boundary
 
-For the Home starting point, copy `index.html` and resolve every owned local dependency from its actual references:
+For the Home starting point, copy `index.html` and resolve every owned local dependency from its actual references. The Home hero is complete in its canonical no-media state: no client image or video asset is needed to make the copied page look finished.
 
 - `styles/tokens.css`, `styles/base.css`, `styles/components.css`;
 - `scripts/main.js` and all imported local modules: `mobile-nav.js`, `scroll-lock.js`, `catalog-filter.js`, `gallery.js`, `faq.js`, `reveal.js`, `video.js`, `inquiry-form.js`;

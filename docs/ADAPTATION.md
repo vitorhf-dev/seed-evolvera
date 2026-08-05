@@ -34,15 +34,15 @@ Stable component families are `site-shell`, `hero`, `proof-rail`, `cards`, `spli
 
 ## Media contracts
 
-Choose one controlled mode per media-bearing component. Use only checked-in local paths and facts about the asset.
+Choose the media mode from the verified assets actually supplied, never from a layout wish. Media is optional: the canonical seed state is `no-media`, and the Home copy is complete without a client image or video. Use only checked-in local paths and facts about the asset. Preserve the existing 90% shell, local-only boundary, captions/alt text and no-invented-facts rules.
 
 ### `media-rich`
 
-A verified local asset fills the prescribed region. Keep intrinsic dimensions, a meaningful alt/caption and a `data-gallery-item` or component-specific hook when interactive. For a local video, provide a factual poster and visible controls; never make critical copy depend on autoplay.
+A verified local image fills the prescribed hero or component frame. Keep intrinsic dimensions, factual alt text, a caption when the image carries meaning, and a `data-gallery-item` or component-specific hook when interactive. Hero images use a fixed-ratio frame with `object-fit: cover`: 4:3 from the desktop media breakpoint and 16:9 below it, so unusual source proportions crop cleanly rather than stretch or letterbox. A supplied image below the approved intrinsic-width threshold belongs in the contained product treatment instead of being upscaled.
 
 ```html
 <figure class="media-rich">
-  <img src="assets/diagrams/material-stack.svg" width="800" height="520"
+  <img src="assets/diagrams/material-stack.svg" width="640" height="420"
        alt="[[Descrição factual do material ou produto mostrado]]">
   <figcaption>[[Legenda factual; fonte e data quando necessário]]</figcaption>
 </figure>
@@ -50,11 +50,11 @@ A verified local asset fills the prescribed region. Keep intrinsic dimensions, a
 
 ### `media-light`
 
-Use one verified local inset, with a caption and generous surrounding content. Do not duplicate one asset to suggest a gallery.
+Use one verified local product render or technical diagram as a contained object on a deliberate plate, with inner breathing room, factual alt text and a caption/source slot for diagrams. Product plates use a 4:3 frame; diagram plates use 16:10. Do not duplicate one asset to suggest a gallery, and do not add a media column when the asset is absent.
 
 ```html
 <figure class="media-light">
-  <img src="../../assets/diagrams/dimension-guide.svg" width="800" height="520"
+  <img src="../../assets/diagrams/dimension-guide.svg" width="640" height="420"
        alt="[[Relação técnica factual mostrada no diagrama]]">
   <figcaption>[[Legenda, unidade e fonte]]</figcaption>
 </figure>
@@ -62,28 +62,34 @@ Use one verified local inset, with a caption and generous surrounding content. D
 
 ### `no-media`
 
-Remove the figure from layout and accessibility flow; expand copy/data or retain a purposeful technical field. Do not leave an empty placeholder, broken image or “imagem em breve”. The current shell uses the editorial fallback:
+This is the default and canonical hero state. No media column is reserved at any width: the hero grid remains one column and the copy measure expands into intentional negative space. The editorial index rail is a compact, border-led visual rail (maximum 64px), not a boxed `technical-field` column, placeholder, broken image or “imagem em breve”. The existing shell keeps it after the copy and trust cue; its ordinal is decorative and the visible `[[...]]` label remains an editable blueprint marker. The section-level `technical-field` utility may provide a low-contrast atmospheric rule field, but it must never create a media slot. No client image or video asset is needed for this state.
 
 ```html
 <section class="hero hero--editorial no-media" data-component="hero">
-  <div class="hero-media hero-media--editorial technical-field" aria-hidden="true">
-    <p class="index">01 / 06</p>
-    <p>[[CONTEÚDO TÉCNICO A SUBSTITUIR]]</p>
+  <div class="container hero-grid">
+    <div>
+      <!-- breadcrumb? → eyebrow → h1 → lead → hero-facts? → actions → trust cue -->
+      [[COPY-FIRST HERO CONTENT]]
+    </div>
+    <div class="hero-media hero-media--editorial" aria-hidden="true">
+      <p class="index">01 / 06</p>
+      <p>[[FAMÍLIAS / CAPACIDADES A SUBSTITUIR]]</p>
+    </div>
   </div>
 </section>
 ```
 
 ### Hero variants
 
-The allowed variants are exactly `hero-media--image`, `hero-media--video`, `hero-media--product` or `hero-media--diagram`, and `hero-media--editorial` for the no-media baseline. Use a factual local asset and preserve the hero copy-first order.
+The allowed variants are exactly `hero-media--image`, `hero-media--video`, `hero-media--product`, `hero-media--diagram` and `hero-media--editorial` for the canonical no-media baseline. Keep the DOM copy-first order on every variant: `breadcrumb?` → `eyebrow` → `h1` → `lead` → `hero-facts?` → `actions` → trust cue → `hero-media`. The media follows the trust cue on mobile as well as in source order, so the headline, lead, action and honesty cue never depend on it.
 
 ```html
-<!-- image: a supplied local image replaces this explicit editable path -->
+<!-- supplied image: fixed-ratio cover frame; width/height prevent layout shift -->
 <div class="hero-media hero-media--image media-rich">
   <img src="../../assets/[[MIDIA.IMAGEM]]" width="[[LARGURA]]" height="[[ALTURA]]" alt="[[Alt factual]]">
 </div>
 
-<!-- local video: supplied local file and poster, muted, controls, no remote source -->
+<!-- optional local video: poster and controls are required; never autoplay or use a remote source -->
 <div class="hero-media hero-media--video media-rich">
   <video controls muted playsinline preload="metadata"
          poster="../../assets/[[MIDIA.POSTER]]" width="[[LARGURA]]" height="[[ALTURA]]">
@@ -91,22 +97,23 @@ The allowed variants are exactly `hero-media--image`, `hero-media--video`, `hero
   </video>
 </div>
 
-<!-- product or diagram: local supplied render or one checked-in diagram -->
+<!-- contained product or diagram plate; diagram needs a factual caption/source -->
 <div class="hero-media hero-media--product media-light">
   <img src="../../assets/[[MIDIA.PRODUTO]]" width="[[LARGURA]]" height="[[ALTURA]]" alt="[[Produto mostrado, sem alegar desempenho]]">
 </div>
-<div class="hero-media hero-media--diagram media-light">
-  <img src="../../assets/diagrams/material-stack.svg" width="800" height="520" alt="[[Relações dimensionais fornecidas]]">
-</div>
+<figure class="hero-media hero-media--diagram media-light">
+  <img src="../../assets/diagrams/material-stack.svg" width="640" height="420" alt="[[Relações técnicas fornecidas]]">
+  <figcaption>[[Legenda, unidade e fonte]]</figcaption>
+</figure>
 
-<!-- editorial no-media: the default when no verified media exists -->
-<div class="hero-media hero-media--editorial technical-field" aria-hidden="true">
+<!-- canonical editorial no-media rail: it does not reserve a media column -->
+<div class="hero-media hero-media--editorial" aria-hidden="true">
   <p class="index">01 / 06</p>
   <p>[[FAMÍLIAS / CAPACIDADES A SUBSTITUIR]]</p>
 </div>
 ```
 
-The sample paths above are contracts, not files to invent: create a path only when the asset is supplied and tested. A failed or unapproved asset falls back to `no-media`. Respect `prefers-reduced-motion`; video must not be necessary for understanding and must retain controls. Use `data-gallery-section`, `data-gallery-item` and `data-gallery-image` only for an actual local gallery, with captions, dialog labels and keyboard/close behavior preserved.
+All sample paths are contracts, not files to invent: create a path only when the asset is supplied, approved and tested. The optional local video requires a factual poster, `controls`, `muted`, `playsinline` and `preload="metadata"`; it is never required for understanding. If that video is poster-less or errors, the existing fail-open behavior hides the video and stamps `no-media` on its `.hero-media` wrapper. CSS removes the wrapper from layout and the hero stays a single-column editorial composition; no empty frame or reserved grid cell remains. Missing or unapproved images are not replaced with invented assets or placeholders. All hero variants cover `img`, `picture`, `svg` and `video` consistently. Respect `prefers-reduced-motion`. Use `data-gallery-section`, `data-gallery-item` and `data-gallery-image` only for an actual local gallery, with captions, dialog labels and keyboard/close behavior preserved.
 
 ## Controlled page and section changes
 
