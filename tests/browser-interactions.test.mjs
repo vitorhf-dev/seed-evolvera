@@ -240,6 +240,159 @@ test("catalog remains fully visible when JavaScript is disabled", async () => {
   });
 });
 
+test("catalog rail stays inside the comparison it annotates at every foundation width", async () => {
+  for (const width of [390, 768, 1440]) {
+    await withPage("/catalogo/", { contextOptions: { viewport: { width, height: 844 } } }, async (page) => {
+      const containment = await page.evaluate(() => {
+        const filter = document.querySelector("[data-component='filter']");
+        const grid = document.querySelector("[data-component='catalog-grid']");
+        const rail = document.querySelector(".catalog-rail");
+        return {
+          gridInsideFilter: filter.contains(grid),
+          railInsideFilter: filter.contains(rail),
+          position: getComputedStyle(rail).position,
+          filterHoldsGrid: filter.querySelectorAll("[data-catalog-card]").length,
+        };
+      });
+      assert.deepEqual(containment, { gridInsideFilter: true, railInsideFilter: true, position: "sticky", filterHoldsGrid: 6 }, `${width}px containment`);
+
+      // Scrolling three quarters through the comparison must keep the rail pinned, not leave it behind with the first row.
+      await page.evaluate(() => {
+        const grid = document.querySelector("[data-component='catalog-grid']").getBoundingClientRect();
+        window.scrollTo({ top: window.scrollY + grid.top + grid.height * 0.75, behavior: "instant" });
+      });
+      // The reveal transition translates the section while it runs, so geometry is read only after it settles.
+      await page.waitForFunction(() => getComputedStyle(document.querySelector("[data-component='filter']")).transform === "none");
+      const pinned = await page.evaluate(async () => {
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        const rail = document.querySelector(".catalog-rail").getBoundingClientRect();
+        return {
+          railTop: rail.top,
+          railVisible: rail.bottom > 0 && rail.top < window.innerHeight,
+          scrolled: window.scrollY > 0,
+          overflows: document.documentElement.scrollWidth > window.innerWidth,
+        };
+      });
+      assert.equal(pinned.scrolled, true, `${width}px: the comparison scrolls`);
+      assert.equal(pinned.railVisible, true, `${width}px: the rail is still on screen inside the comparison`);
+      assert.ok(pinned.railTop <= 24, `${width}px: the rail is pinned near the viewport top, measured ${pinned.railTop}`);
+      assert.equal(pinned.overflows, false, `${width}px: no document overflow`);
+
+      // Past the comparison the rail must release instead of covering the following sections.
+      const released = await page.evaluate(async () => {
+        window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" });
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        const rail = document.querySelector(".catalog-rail").getBoundingClientRect();
+        const help = document.querySelector("[data-component='selection-help']").getBoundingClientRect();
+        return { railBottom: rail.bottom, helpTop: help.top };
+      });
+      assert.ok(released.railBottom <= released.helpTop + 1, `${width}px: the rail never covers the following section (${JSON.stringify(released)})`);
+    });
+  }
+});
+
+test("narrow catalog controls scroll horizontally instead of overflowing the document", async () => {
+  await withPage("/catalogo/", {}, async (page) => {
+    const controls = page.locator(".catalog-rail__controls");
+    const geometry = await controls.evaluate((element) => ({
+      wrap: getComputedStyle(element).flexWrap,
+      overflowX: getComputedStyle(element).overflowX,
+      clientWidth: element.clientWidth,
+      scrollWidth: element.scrollWidth,
+      buttons: element.querySelectorAll("[data-filter]").length,
+      documentOverflows: document.documentElement.scrollWidth > window.innerWidth,
+    }));
+    assert.equal(geometry.wrap, "nowrap");
+    assert.equal(geometry.overflowX, "auto");
+    assert.equal(geometry.buttons, 3);
+    assert.equal(geometry.documentOverflows, false);
+    assert.ok(geometry.scrollWidth > geometry.clientWidth, `controls overflow their rail at 390px (${geometry.scrollWidth} > ${geometry.clientWidth})`);
+    const scrolled = await controls.evaluate((element) => {
+      element.scrollLeft = element.scrollWidth;
+      return element.scrollLeft;
+    });
+    assert.ok(scrolled > 0, "the control strip actually scrolls horizontally");
+    assert.equal(await page.locator("[data-filter='category-02']").isVisible(), true);
+    assert.equal(await page.locator(".filter-fallback").isVisible(), false, "the native fallback stays hidden while scripting works");
+  });
+});
+
+test("no-JS catalog navigates by native category anchors with every card visible", async () => {
+  await withPage("/catalogo/", { contextOptions: { javaScriptEnabled: false } }, async (page) => {
+    const cards = page.locator("[data-catalog-card]");
+    assert.equal(await cards.count(), 6);
+    assert.equal(await cards.evaluateAll((elements) => elements.every((element) => element.getClientRects().length > 0)), true, "every card is rendered");
+    assert.deepEqual(await cards.evaluateAll((elements) => elements.map((element) => element.dataset.category)), ["category-01", "category-01", "category-01", "category-02", "category-02", "category-02"]);
+    assert.equal(await page.locator(".filter-controls").isVisible(), false, "the inert enhanced controls are not presented");
+
+    const fallback = page.locator(".filter-fallback");
+    assert.equal(await fallback.isVisible(), true);
+    assert.equal(await fallback.getAttribute("aria-label"), "Categorias sem JavaScript");
+    const links = await fallback.locator("a").evaluateAll((elements) => elements.map((element) => ({
+      href: element.getAttribute("href"),
+      label: element.textContent.trim(),
+      pressed: element.getAttribute("aria-pressed"),
+      width: element.getBoundingClientRect().width,
+      height: element.getBoundingClientRect().height,
+    })));
+    assert.deepEqual(links.map(({ href, label, pressed }) => ({ href, label, pressed })), [
+      { href: "#catalogo-familias", label: "Todas", pressed: null },
+      { href: "#familia-01", label: "[[CATEGORIA 01]]", pressed: null },
+      { href: "#familia-04", label: "[[CATEGORIA 02]]", pressed: null },
+    ]);
+    for (const link of links) assert.ok(link.width >= 44 && link.height >= 44, `fallback target: ${JSON.stringify(link)}`);
+
+    // Each fallback target must be a real element of the preserved comparison, reached without scripting.
+    for (const [hash, heading] of [["#catalogo-familias", "Famílias de exemplo para substituição"], ["#familia-01", "[[FAMÍLIA 01]]"], ["#familia-04", "[[FAMÍLIA 04]]"]]) {
+      // Native anchors scroll smoothly, so the link is activated by keyboard instead of waiting for a stable hit box.
+      await page.locator(`.filter-fallback a[href="${hash}"]`).focus();
+      await page.keyboard.press("Enter");
+      assert.equal(new URL(page.url()).hash, hash, `${hash} is reached natively`);
+      const target = page.locator(hash);
+      assert.equal(await target.count(), 1, `${hash} resolves to exactly one element`);
+      assert.equal((await target.locator("h2, h3").first().innerText()).trim(), heading, `${hash} reaches its authored content`);
+      assert.equal(await cards.evaluateAll((elements) => elements.every((element) => !element.hidden && element.getClientRects().length > 0)), true, `${hash} hides no static card`);
+    }
+    assert.equal(await page.locator("[data-filter-empty]").isVisible(), false, "no false empty state without scripting");
+    assert.equal(await page.locator("[data-filter-reset]").isVisible(), false, "no false reset state without scripting");
+  });
+});
+
+test("card RFQ action reaches Contact generically and carries no item context", async () => {
+  await withPage("/catalogo/", {}, async (page) => {
+    const actions = await page.locator("[data-catalog-card] .card-actions").evaluateAll((groups) => groups.map((group) => [...group.querySelectorAll("a")].map((link) => ({
+      href: link.getAttribute("href"),
+      label: link.textContent.trim(),
+      height: link.getBoundingClientRect().height,
+    }))));
+    assert.equal(actions.length, 6);
+    for (const group of actions) {
+      assert.deepEqual(group.map(({ href, label }) => ({ href, label })), [
+        { href: "solucao-exemplo/", label: "Consultar detalhes" },
+        { href: "../contato/", label: "Solicitar avaliação" },
+      ]);
+      for (const link of group) assert.ok(link.height >= 44, `card action target: ${JSON.stringify(link)}`);
+    }
+
+    await page.locator("[data-catalog-card] .card-actions a[href='../contato/']").first().click();
+    await page.waitForURL("**/contato/");
+    const location = new URL(page.url());
+    assert.equal(location.pathname, "/contato/");
+    assert.equal(location.search, "", "the generic action carries no query");
+    assert.equal(await page.locator("[data-context-summary]").textContent(), "Nenhum item específico selecionado");
+    assert.equal(await page.locator("#reference").inputValue(), "");
+    assert.equal(await page.locator("#inquiryType:checked").count(), 0);
+    await fillValidForm(page);
+    const context = await page.evaluate(() => new Promise((resolve) => {
+      const form = document.querySelector("[data-inquiry-form]");
+      form.addEventListener("seed:inquiry-submit", (event) => resolve(event.detail.context), { once: true });
+      form.querySelector("[data-form-submit]").click();
+    }));
+    assert.equal(context, null);
+    assert.equal(await page.locator("[data-form-status]").textContent(), pendingText);
+  });
+});
+
 test("gallery preserves authored links and owns its complete keyboard lifecycle", async () => {
   await withPage("/catalogo/solucao-exemplo/", {}, async (page) => {
     const items = page.locator(".gallery a[data-gallery-item]");

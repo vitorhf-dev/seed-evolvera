@@ -119,281 +119,323 @@
           </div>
         </div>
       </section>
-      <section class="section" data-component="filter">
+      <section class="section catalog-comparison" data-component="filter">
         <div class="container">
-          <div class="filter" data-catalog-filter>
+          <!-- The rail is a block child of this container so its sticky lifespan spans the whole card comparison below. -->
+          <div class="filter catalog-rail" data-catalog-filter>
             <h2>
               Filtrar famílias
             </h2>
             <p>
               Todos os itens estão visíveis. Ative JavaScript para filtrar nesta página.
             </p>
-            <div class="filter-controls" role="group" aria-label="Filtrar famílias por categoria">
-              <button type="button" data-filter="all" aria-pressed="true">
-                Todas
-              </button>
-              <button type="button" data-filter="category-01" aria-pressed="false">
-                [[CATEGORIA 01]]
-              </button>
-              <button type="button" data-filter="category-02" aria-pressed="false">
-                [[CATEGORIA 02]]
-              </button>
+            <div class="filter-controls">
+              <div class="catalog-rail__controls" role="group" aria-label="Filtrar famílias por categoria">
+                <button type="button" data-filter="all" aria-pressed="true">
+                  Todas
+                </button>
+                <button type="button" data-filter="category-01" aria-pressed="false">
+                  [[CATEGORIA 01]]
+                </button>
+                <button type="button" data-filter="category-02" aria-pressed="false">
+                  [[CATEGORIA 02]]
+                </button>
+              </div>
             </div>
+            <nav class="filter-fallback" aria-label="Categorias sem JavaScript">
+              <a href="#catalogo-familias">
+                Todas
+              </a>
+              <a href="#familia-01">
+                [[CATEGORIA 01]]
+              </a>
+              <a href="#familia-04">
+                [[CATEGORIA 02]]
+              </a>
+            </nav>
             <p data-filter-count aria-live="polite">
               6 famílias encontradas
             </p>
             <button type="button" data-filter-reset hidden>Limpar filtros</button>
             <p data-filter-empty hidden>Nenhuma família corresponde aos filtros.</p>
           </div>
-        </div>
-      </section>
-      <section class="section" data-component="catalog-grid">
-        <div class="container">
-          <h2>
-            Famílias de exemplo para substituição
-          </h2>
-          <div class="grid three">
-            <article class="card no-media" data-catalog-card data-category="category-01">
-              <p class="eyebrow">
-                [[CATEGORIA]]
-              </p>
-              <h3>
-                [[FAMÍLIA 01]]
-              </h3>
-              <p>
-                [[Função e contexto em 20–40 palavras, sem disponibilidade ou desempenho implícitos.]]
-              </p>
-              <dl class="meta">
-                <div>
-                  <dt>
-                    Material
-                  </dt>
-                  <dd>
-                    [[A CONFIRMAR]]
-                  </dd>
+          <section class="section catalog-comparison__layout" id="catalogo-familias" data-component="catalog-grid">
+            <h2>
+              Famílias de exemplo para substituição
+            </h2>
+            <div class="grid three">
+              <article class="card no-media" id="familia-01" data-catalog-card data-category="category-01">
+                <p class="eyebrow">
+                  [[CATEGORIA]]
+                </p>
+                <h3>
+                  [[FAMÍLIA 01]]
+                </h3>
+                <p>
+                  [[Função e contexto em 20–40 palavras, sem disponibilidade ou desempenho implícitos.]]
+                </p>
+                <dl class="meta">
+                  <div>
+                    <dt>
+                      Material
+                    </dt>
+                    <dd>
+                      [[A CONFIRMAR]]
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>
+                      Faixa dimensional
+                    </dt>
+                    <dd>
+                      [[A CONFIRMAR]]
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>
+                      Tratamentos
+                    </dt>
+                    <dd>
+                      [[A CONFIRMAR]]
+                    </dd>
+                  </div>
+                </dl>
+                <div class="card-actions">
+                  <a href="solucao-exemplo/">
+                    Consultar detalhes
+                  </a>
+                  <a href="../contato/">
+                    Solicitar avaliação
+                  </a>
                 </div>
-                <div>
-                  <dt>
-                    Faixa dimensional
-                  </dt>
-                  <dd>
-                    [[A CONFIRMAR]]
-                  </dd>
+              </article>
+              <article class="card no-media" data-catalog-card data-category="category-01">
+                <p class="eyebrow">
+                  [[CATEGORIA]]
+                </p>
+                <h3>
+                  [[FAMÍLIA 02]]
+                </h3>
+                <p>
+                  [[Função e contexto em 20–40 palavras, sem disponibilidade ou desempenho implícitos.]]
+                </p>
+                <dl class="meta">
+                  <div>
+                    <dt>
+                      Material
+                    </dt>
+                    <dd>
+                      [[A CONFIRMAR]]
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>
+                      Faixa dimensional
+                    </dt>
+                    <dd>
+                      [[A CONFIRMAR]]
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>
+                      Tratamentos
+                    </dt>
+                    <dd>
+                      [[A CONFIRMAR]]
+                    </dd>
+                  </div>
+                </dl>
+                <div class="card-actions">
+                  <a href="solucao-exemplo/">
+                    Consultar detalhes
+                  </a>
+                  <a href="../contato/">
+                    Solicitar avaliação
+                  </a>
                 </div>
-                <div>
-                  <dt>
-                    Tratamentos
-                  </dt>
-                  <dd>
-                    [[A CONFIRMAR]]
-                  </dd>
+              </article>
+              <article class="card no-media" data-catalog-card data-category="category-01">
+                <p class="eyebrow">
+                  [[CATEGORIA]]
+                </p>
+                <h3>
+                  [[FAMÍLIA 03]]
+                </h3>
+                <p>
+                  [[Função e contexto em 20–40 palavras, sem disponibilidade ou desempenho implícitos.]]
+                </p>
+                <dl class="meta">
+                  <div>
+                    <dt>
+                      Material
+                    </dt>
+                    <dd>
+                      [[A CONFIRMAR]]
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>
+                      Faixa dimensional
+                    </dt>
+                    <dd>
+                      [[A CONFIRMAR]]
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>
+                      Tratamentos
+                    </dt>
+                    <dd>
+                      [[A CONFIRMAR]]
+                    </dd>
+                  </div>
+                </dl>
+                <div class="card-actions">
+                  <a href="solucao-exemplo/">
+                    Consultar detalhes
+                  </a>
+                  <a href="../contato/">
+                    Solicitar avaliação
+                  </a>
                 </div>
-              </dl>
-              <a href="solucao-exemplo/">
-                Consultar detalhes
-              </a>
-            </article>
-            <article class="card no-media" data-catalog-card data-category="category-01">
-              <p class="eyebrow">
-                [[CATEGORIA]]
-              </p>
-              <h3>
-                [[FAMÍLIA 02]]
-              </h3>
-              <p>
-                [[Função e contexto em 20–40 palavras, sem disponibilidade ou desempenho implícitos.]]
-              </p>
-              <dl class="meta">
-                <div>
-                  <dt>
-                    Material
-                  </dt>
-                  <dd>
-                    [[A CONFIRMAR]]
-                  </dd>
+              </article>
+              <article class="card no-media" id="familia-04" data-catalog-card data-category="category-02">
+                <p class="eyebrow">
+                  [[CATEGORIA]]
+                </p>
+                <h3>
+                  [[FAMÍLIA 04]]
+                </h3>
+                <p>
+                  [[Função e contexto em 20–40 palavras, sem disponibilidade ou desempenho implícitos.]]
+                </p>
+                <dl class="meta">
+                  <div>
+                    <dt>
+                      Material
+                    </dt>
+                    <dd>
+                      [[A CONFIRMAR]]
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>
+                      Faixa dimensional
+                    </dt>
+                    <dd>
+                      [[A CONFIRMAR]]
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>
+                      Tratamentos
+                    </dt>
+                    <dd>
+                      [[A CONFIRMAR]]
+                    </dd>
+                  </div>
+                </dl>
+                <div class="card-actions">
+                  <a href="solucao-exemplo/">
+                    Consultar detalhes
+                  </a>
+                  <a href="../contato/">
+                    Solicitar avaliação
+                  </a>
                 </div>
-                <div>
-                  <dt>
-                    Faixa dimensional
-                  </dt>
-                  <dd>
-                    [[A CONFIRMAR]]
-                  </dd>
+              </article>
+              <article class="card no-media" data-catalog-card data-category="category-02">
+                <p class="eyebrow">
+                  [[CATEGORIA]]
+                </p>
+                <h3>
+                  [[FAMÍLIA 05]]
+                </h3>
+                <p>
+                  [[Função e contexto em 20–40 palavras, sem disponibilidade ou desempenho implícitos.]]
+                </p>
+                <dl class="meta">
+                  <div>
+                    <dt>
+                      Material
+                    </dt>
+                    <dd>
+                      [[A CONFIRMAR]]
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>
+                      Faixa dimensional
+                    </dt>
+                    <dd>
+                      [[A CONFIRMAR]]
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>
+                      Tratamentos
+                    </dt>
+                    <dd>
+                      [[A CONFIRMAR]]
+                    </dd>
+                  </div>
+                </dl>
+                <div class="card-actions">
+                  <a href="solucao-exemplo/">
+                    Consultar detalhes
+                  </a>
+                  <a href="../contato/">
+                    Solicitar avaliação
+                  </a>
                 </div>
-                <div>
-                  <dt>
-                    Tratamentos
-                  </dt>
-                  <dd>
-                    [[A CONFIRMAR]]
-                  </dd>
+              </article>
+              <article class="card no-media" data-catalog-card data-category="category-02">
+                <p class="eyebrow">
+                  [[CATEGORIA]]
+                </p>
+                <h3>
+                  [[FAMÍLIA 06]]
+                </h3>
+                <p>
+                  [[Função e contexto em 20–40 palavras, sem disponibilidade ou desempenho implícitos.]]
+                </p>
+                <dl class="meta">
+                  <div>
+                    <dt>
+                      Material
+                    </dt>
+                    <dd>
+                      [[A CONFIRMAR]]
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>
+                      Faixa dimensional
+                    </dt>
+                    <dd>
+                      [[A CONFIRMAR]]
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>
+                      Tratamentos
+                    </dt>
+                    <dd>
+                      [[A CONFIRMAR]]
+                    </dd>
+                  </div>
+                </dl>
+                <div class="card-actions">
+                  <a href="solucao-exemplo/">
+                    Consultar detalhes
+                  </a>
+                  <a href="../contato/">
+                    Solicitar avaliação
+                  </a>
                 </div>
-              </dl>
-              <a href="solucao-exemplo/">
-                Consultar detalhes
-              </a>
-            </article>
-            <article class="card no-media" data-catalog-card data-category="category-01">
-              <p class="eyebrow">
-                [[CATEGORIA]]
-              </p>
-              <h3>
-                [[FAMÍLIA 03]]
-              </h3>
-              <p>
-                [[Função e contexto em 20–40 palavras, sem disponibilidade ou desempenho implícitos.]]
-              </p>
-              <dl class="meta">
-                <div>
-                  <dt>
-                    Material
-                  </dt>
-                  <dd>
-                    [[A CONFIRMAR]]
-                  </dd>
-                </div>
-                <div>
-                  <dt>
-                    Faixa dimensional
-                  </dt>
-                  <dd>
-                    [[A CONFIRMAR]]
-                  </dd>
-                </div>
-                <div>
-                  <dt>
-                    Tratamentos
-                  </dt>
-                  <dd>
-                    [[A CONFIRMAR]]
-                  </dd>
-                </div>
-              </dl>
-              <a href="solucao-exemplo/">
-                Consultar detalhes
-              </a>
-            </article>
-            <article class="card no-media" data-catalog-card data-category="category-02">
-              <p class="eyebrow">
-                [[CATEGORIA]]
-              </p>
-              <h3>
-                [[FAMÍLIA 04]]
-              </h3>
-              <p>
-                [[Função e contexto em 20–40 palavras, sem disponibilidade ou desempenho implícitos.]]
-              </p>
-              <dl class="meta">
-                <div>
-                  <dt>
-                    Material
-                  </dt>
-                  <dd>
-                    [[A CONFIRMAR]]
-                  </dd>
-                </div>
-                <div>
-                  <dt>
-                    Faixa dimensional
-                  </dt>
-                  <dd>
-                    [[A CONFIRMAR]]
-                  </dd>
-                </div>
-                <div>
-                  <dt>
-                    Tratamentos
-                  </dt>
-                  <dd>
-                    [[A CONFIRMAR]]
-                  </dd>
-                </div>
-              </dl>
-              <a href="solucao-exemplo/">
-                Consultar detalhes
-              </a>
-            </article>
-            <article class="card no-media" data-catalog-card data-category="category-02">
-              <p class="eyebrow">
-                [[CATEGORIA]]
-              </p>
-              <h3>
-                [[FAMÍLIA 05]]
-              </h3>
-              <p>
-                [[Função e contexto em 20–40 palavras, sem disponibilidade ou desempenho implícitos.]]
-              </p>
-              <dl class="meta">
-                <div>
-                  <dt>
-                    Material
-                  </dt>
-                  <dd>
-                    [[A CONFIRMAR]]
-                  </dd>
-                </div>
-                <div>
-                  <dt>
-                    Faixa dimensional
-                  </dt>
-                  <dd>
-                    [[A CONFIRMAR]]
-                  </dd>
-                </div>
-                <div>
-                  <dt>
-                    Tratamentos
-                  </dt>
-                  <dd>
-                    [[A CONFIRMAR]]
-                  </dd>
-                </div>
-              </dl>
-              <a href="solucao-exemplo/">
-                Consultar detalhes
-              </a>
-            </article>
-            <article class="card no-media" data-catalog-card data-category="category-02">
-              <p class="eyebrow">
-                [[CATEGORIA]]
-              </p>
-              <h3>
-                [[FAMÍLIA 06]]
-              </h3>
-              <p>
-                [[Função e contexto em 20–40 palavras, sem disponibilidade ou desempenho implícitos.]]
-              </p>
-              <dl class="meta">
-                <div>
-                  <dt>
-                    Material
-                  </dt>
-                  <dd>
-                    [[A CONFIRMAR]]
-                  </dd>
-                </div>
-                <div>
-                  <dt>
-                    Faixa dimensional
-                  </dt>
-                  <dd>
-                    [[A CONFIRMAR]]
-                  </dd>
-                </div>
-                <div>
-                  <dt>
-                    Tratamentos
-                  </dt>
-                  <dd>
-                    [[A CONFIRMAR]]
-                  </dd>
-                </div>
-              </dl>
-              <a href="solucao-exemplo/">
-                Consultar detalhes
-              </a>
-            </article>
-          </div>
+              </article>
+            </div>
+          </section>
         </div>
       </section>
       <section class="section surface" data-component="selection-help">

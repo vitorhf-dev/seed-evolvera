@@ -206,6 +206,54 @@ test("capability and product heroes carry their fixed conversion and orientation
   assert.equal((heroActions.match(/class="button"/g) ?? []).length, 1, "one solid hero action");
 });
 
+test("catalog contains its comparison grid and pairs every card with a generic RFQ action", () => {
+  const file = "catalogo/index.html";
+  const html = readFileSync(file, "utf8");
+
+  // Containment: the grid section is authored inside the filter section, so the rail can span the whole comparison.
+  const comparison = html.match(/<section class="section catalog-comparison" data-component="filter">[\s\S]*?<section class="section surface" data-component="selection-help">/);
+  assert.ok(comparison, "filter section precedes selection-help");
+  const filterSection = html.slice(html.indexOf('<section class="section catalog-comparison" data-component="filter">'), html.indexOf('<section class="section surface" data-component="selection-help">'));
+  assert.match(filterSection, /<section class="section catalog-comparison__layout" id="catalogo-familias" data-component="catalog-grid">/, "grid section is nested inside the comparison");
+  assert.equal((filterSection.match(/data-component="catalog-grid"/g) ?? []).length, 1);
+  assert.match(filterSection, /<div class="filter catalog-rail" data-catalog-filter>/, "the filter panel is the sticky rail");
+  assert.match(filterSection, /<div class="catalog-rail__controls" role="group" aria-label="Filtrar famílias por categoria">/, "enhanced controls stay scrollable inside the rail");
+  for (const hook of ["data-filter=\"all\"", "data-filter=\"category-01\"", "data-filter=\"category-02\"", "data-filter-count", "data-filter-reset", "data-filter-empty"]) {
+    assert.equal(filterSection.includes(hook), true, `${hook} stays inside the filter root`);
+  }
+
+  // No-scripting fallback: labelled links whose targets are real ids of the preserved content.
+  const fallback = filterSection.match(/<nav class="filter-fallback" aria-label="([^"]+)">([\s\S]*?)<\/nav>/);
+  assert.ok(fallback, "the fallback control set exists and is labelled");
+  assert.equal(fallback[1], "Categorias sem JavaScript");
+  const fallbackLinks = [...fallback[2].matchAll(/<a href="([^"]+)">\s*([^<]+?)\s*<\/a>/g)].map((match) => ({ href: match[1], label: match[2] }));
+  assert.deepEqual(fallbackLinks, [
+    { href: "#catalogo-familias", label: "Todas" },
+    { href: "#familia-01", label: "[[CATEGORIA 01]]" },
+    { href: "#familia-04", label: "[[CATEGORIA 02]]" },
+  ]);
+  for (const { href } of fallbackLinks) assert.equal((html.match(new RegExp(`id="${href.slice(1)}"`, "g")) ?? []).length, 1, `${href} resolves to exactly one element`);
+  assert.doesNotMatch(fallback[2], /aria-pressed|data-filter=/, "the fallback presents no pressed or filtered state");
+
+  // Conversion: six preserved cards, each with one detail path and one query-free Contact path.
+  const cards = [...html.matchAll(/<article class="card no-media"[^>]*data-catalog-card data-category="(category-0[12])"[^>]*>([\s\S]*?)<\/article>/g)];
+  assert.equal(cards.length, 6);
+  assert.deepEqual(cards.map(([, category]) => category), ["category-01", "category-01", "category-01", "category-02", "category-02", "category-02"]);
+  for (const [, , body] of cards) {
+    const actions = body.match(/<div class="card-actions">([\s\S]*?)<\/div>\s*$/);
+    assert.ok(actions, "card ends with one action group");
+    const links = [...actions[1].matchAll(/<a href="([^"]+)">\s*([^<]+?)\s*<\/a>/g)].map((match) => ({ href: match[1], label: match[2] }));
+    assert.deepEqual(links, [
+      { href: "solucao-exemplo/", label: "Consultar detalhes" },
+      { href: "../contato/", label: "Solicitar avaliação" },
+    ]);
+    assert.equal((body.match(/<a /g) ?? []).length, 2, "no extra card link is introduced");
+    assert.deepEqual([...body.matchAll(/<dd>\s*([^<]+?)\s*<\/dd>/g)].map((match) => match[1]), Array.from({ length: 3 }, () => "[[A CONFIRMAR]]"), "card facts stay unresolved");
+  }
+  assert.doesNotMatch(html, /href="\.\.\/contato\/[^"]*\?/, "catalog Contact links carry no query context");
+  assert.doesNotMatch(html, /[?&](?:tipo|type|ref|reference)=/, "the catalog infers no product or service reference");
+});
+
 test("contact declares the no-JavaScript boundary before the inert control", () => {
   const html = readFileSync("contato/index.html", "utf8");
   assert.match(html, /<noscript class="notice">\s*<p>\s*A validação assistida requer JavaScript\. Use um canal direto verificado\.\s*<\/p>\s*<\/noscript>\s*<button class="button" type="button" data-form-submit>/);
