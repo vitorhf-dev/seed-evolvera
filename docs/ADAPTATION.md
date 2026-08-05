@@ -124,6 +124,15 @@ All sample paths are contracts, not files to invent: create a path only when the
 5. Update `blueprint.json` descriptively, the fixed structural inventory and any browser journey together. The manifest is never the sole oracle: the HTML, filesystem and tests must independently agree.
 6. Re-run the read-only structure/server checks, then the serial browser checks. Review the source fingerprint and `git diff --check` before publication.
 
+### Navigation, catalog rail, RFQ, and resource omission rules
+
+- Keep the desktop header nav grouped and bounded as a secondary surface with one `aria-current` page, and keep one pill-shaped primary header CTA.
+- Keep home quick-links after the hero; targets must be local-real: anchor IDs for in-page sections and existing local routes for cross-page links.
+- On catalog, keep enhanced filter controls and the no-JS fallback navigation, including fail-open states and exact hidden/empty behavior.
+- Catalog RFQ actions stay generic (`../contato/`) with no invented query context; contextual queries are only for explicit product/service detail mappings.
+- Add media/document links only for checked-in local files; omit unverified resources rather than inventing placeholders.
+
+
 ### Six-file shell checklist
 
 Update and review every exact file—never implement a client-side include or generated shell:
