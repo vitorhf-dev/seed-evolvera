@@ -136,6 +136,93 @@ test("canonical no-media heroes reserve one grid column at tablet and desktop wi
   }
 });
 
+test("desktop headers render one grouped rounded-rectangle navigation with a stronger CTA", async () => {
+  const origin = await listen();
+  const browser = await chromium.launch({ headless: true });
+
+  try {
+    for (const route of routes) {
+      const context = await browser.newContext({
+        viewport: { width: 1440, height: 900 },
+        javaScriptEnabled: false,
+        reducedMotion: "reduce",
+      });
+      const page = await context.newPage();
+      await page.route("**/*", async (requestRoute) => {
+        const url = new URL(requestRoute.request().url());
+        if (url.hostname !== "127.0.0.1") {
+          await requestRoute.abort("blockedbyclient");
+          return;
+        }
+        await requestRoute.continue();
+      });
+      await page.goto(origin + route, { waitUntil: "load" });
+
+      const header = await page.evaluate(() => {
+        const nav = document.querySelector(".nav.desktop-nav");
+        const cta = document.querySelector(".header-cta");
+        const navStyle = getComputedStyle(nav);
+        const ctaStyle = getComputedStyle(cta);
+        const navBox = nav.getBoundingClientRect();
+        const links = [...nav.querySelectorAll("a")].map((link) => {
+          const style = getComputedStyle(link);
+          const box = link.getBoundingClientRect();
+          return {
+            radius: Number.parseFloat(style.borderTopLeftRadius),
+            height: box.height,
+            width: box.width,
+            insideGroup: box.left >= navBox.left - 0.5 && box.right <= navBox.right + 0.5,
+            current: link.getAttribute("aria-current") === "page",
+            background: style.backgroundColor,
+          };
+        });
+        return {
+          navVisible: navBox.width > 0 && navBox.height > 0,
+          navRadius: Number.parseFloat(navStyle.borderTopLeftRadius),
+          navBorderWidth: Number.parseFloat(navStyle.borderTopWidth),
+          navBackground: navStyle.backgroundColor,
+          navTransparent: navStyle.backgroundColor === "rgba(0, 0, 0, 0)",
+          navHeight: navBox.height,
+          links,
+          ctaVisible: cta.getBoundingClientRect().height > 0,
+          ctaBackground: ctaStyle.backgroundColor,
+          ctaTransparent: ctaStyle.backgroundColor === "rgba(0, 0, 0, 0)",
+          ctaRadius: Number.parseFloat(ctaStyle.borderTopLeftRadius),
+          ctaHeight: cta.getBoundingClientRect().height,
+        };
+      });
+
+      assert.equal(header.navVisible, true, `${route} desktop nav is visible at 1440px`);
+      assert.equal(header.navTransparent, false, `${route} nav group is one filled surface`);
+      assert.ok(header.navBorderWidth >= 1, `${route} nav group is bounded by a border`);
+      assert.ok(header.navRadius >= 10 && header.navRadius <= 28, `${route} nav group uses a medium radius: ${header.navRadius}`);
+      assert.equal(header.links.length, 5, `${route} keeps five nav links`);
+      assert.equal(header.links.filter((link) => link.current).length, 1, `${route} marks exactly one current link`);
+      for (const link of header.links) {
+        assert.ok(link.height >= 44 && link.width >= 44, `${route} nav target: ${JSON.stringify(link)}`);
+        assert.ok(link.radius >= 4 && link.radius < link.height / 2, `${route} nav link is a rounded rectangle, not a pill: ${link.radius}`);
+        assert.equal(link.insideGroup, true, `${route} nav link sits inside the group surface`);
+      }
+      const current = header.links.find((link) => link.current);
+      const resting = header.links.find((link) => !link.current);
+      assert.notEqual(current.background, resting.background, `${route} current link is visually distinct`);
+      assert.notEqual(current.background, header.navBackground, `${route} current link separates from the group surface`);
+
+      assert.equal(header.ctaVisible, true, `${route} header CTA is visible at 1440px`);
+      assert.equal(header.ctaTransparent, false, `${route} header CTA stays a solid primary control`);
+      assert.notEqual(header.ctaBackground, header.navBackground, `${route} header CTA is not part of the nav group`);
+      for (const link of header.links) {
+        assert.notEqual(header.ctaBackground, link.background, `${route} header CTA outranks every nav link`);
+      }
+      assert.ok(header.ctaRadius >= header.ctaHeight / 2, `${route} header CTA keeps its pill shape: ${header.ctaRadius}`);
+      await context.close();
+    }
+  } finally {
+    await browser.close();
+    await new Promise((resolve) => server.close(resolve));
+  }
+});
+
 test("Contact states the no-JavaScript boundary directly before the inert control", async () => {
   const origin = await listen();
   const browser = await chromium.launch({ headless: true });
