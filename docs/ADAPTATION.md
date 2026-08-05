@@ -127,7 +127,7 @@ All sample paths are contracts, not files to invent: create a path only when the
 ### Navigation, catalog rail, RFQ, and resource omission rules
 
 - Keep the desktop header nav grouped and bounded as a secondary surface with one `aria-current` page, and keep one pill-shaped primary header CTA.
-- Keep home quick-links after the hero; targets must be local-real: anchor IDs for in-page sections and existing local routes for cross-page links.
+- Add in-page quick links only when a verified adapted Home is genuinely long and has real targets; do not make them a canonical seed component.
 - On catalog, keep enhanced filter controls and the no-JS fallback navigation, including fail-open states and exact hidden/empty behavior.
 - Catalog RFQ actions stay generic (`../contato/`) with no invented query context; contextual queries are only for explicit product/service detail mappings.
 - Add media/document links only for checked-in local files; omit unverified resources rather than inventing placeholders.
