@@ -279,6 +279,45 @@ test("Home mobile first viewport and native no-JS navigation remain complete", a
       assert.ok(box.y >= 0 && box.y + box.height <= 844, `${selector} is inside the first viewport`);
     }
 
+    const quickLinks = page.locator("nav[aria-labelledby] .home-quick-links a");
+    assert.equal(await quickLinks.count(), 4, "Home exposes four quick links after the hero");
+    const quickLinkGeometry = await page.evaluate(() => {
+      const heroBottom = document.querySelector("[data-component=hero]").getBoundingClientRect().bottom;
+      return {
+        overflows: document.documentElement.scrollWidth > window.innerWidth,
+        links: [...document.querySelectorAll("nav[aria-labelledby] .home-quick-links a")].map((link) => {
+          const box = link.getBoundingClientRect();
+          return { href: link.getAttribute("href"), width: box.width, height: box.height, afterHero: box.top >= heroBottom };
+        }),
+      };
+    });
+    assert.equal(quickLinkGeometry.overflows, false, "quick links cause no document overflow at 390px");
+    assert.deepEqual(quickLinkGeometry.links.map((link) => link.href), ["#familias", "#adequacao", "#processo", "contato/"]);
+    for (const link of quickLinkGeometry.links) {
+      assert.ok(link.width >= 44 && link.height >= 44, `quick link target: ${JSON.stringify(link)}`);
+      assert.equal(link.afterHero, true, `quick link ${link.href} follows the hero`);
+    }
+
+    // Structure tests cannot resolve hashes, so each destination is proved by an independent existing heading.
+    const samePageTargets = [
+      ["#familias", "Famílias para organizar a seleção"],
+      ["#adequacao", "O requisito orienta a avaliação"],
+      ["#processo", "Da necessidade ao próximo passo"],
+    ];
+    for (const [hash, heading] of samePageTargets) {
+      await page.locator(`.home-quick-links a[href="${hash}"]`).focus();
+      await page.keyboard.press("Enter");
+      assert.equal(new URL(page.url()).hash, hash, `${hash} is reached natively without JavaScript`);
+      const target = page.locator(hash);
+      assert.equal(await target.count(), 1, `${hash} resolves to exactly one section`);
+      assert.equal((await target.locator("h2").first().innerText()).trim(), heading, `${hash} reaches its expected heading`);
+    }
+
+    await page.goto(origin + "/", { waitUntil: "load" });
+    await page.locator('.home-quick-links a[href="contato/"]').click();
+    assert.equal(new URL(page.url()).pathname, "/contato/", "the Contact quick link uses the existing local route");
+    await page.goto(origin + "/", { waitUntil: "load" });
+
     assert.equal(await page.locator(".desktop-nav").isVisible(), false);
     const menu = page.locator("details.mobile-nav");
     assert.equal(await menu.isVisible(), true);
