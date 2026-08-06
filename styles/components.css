@@ -1076,6 +1076,10 @@ body.js-enhanced .mobile-nav[open] nav {
   .split {
     grid-template-columns: 5fr 7fr;
   }
+  /* The closing CTA belongs at the container edge, not at the start of the wider second grid track. */
+  .cta-band .split > .button {
+    justify-self: end;
+  }
   .proof-rail dl {
     grid-template-columns: repeat(2,1fr);
   }

@@ -12,6 +12,7 @@ const routes = [
   "/contato/",
 ];
 const viewports = [390, 768, 1440];
+const ctaBandRoutes = ["/", "/empresa/"];
 
 async function listen() {
   await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
@@ -158,6 +159,43 @@ test("canonical no-media heroes are one copy-only track that centers at the read
             `${route} at ${width}px fills the hero grid: ${layout.copyWidth} vs ${layout.gridWidth}`,
           );
         }
+        await context.close();
+      }
+    }
+  } finally {
+    await browser.close();
+    await new Promise((resolve) => server.close(resolve));
+  }
+});
+
+test("closing CTA bands anchor their action to the container edge on desktop", async () => {
+  const origin = await listen();
+  const browser = await chromium.launch({ headless: true });
+
+  try {
+    for (const width of [768, 1440]) {
+      for (const route of ctaBandRoutes) {
+        const context = await browser.newContext({
+          viewport: { width, height: 900 },
+          javaScriptEnabled: false,
+          reducedMotion: "reduce",
+        });
+        const page = await context.newPage();
+        await page.goto(origin + route, { waitUntil: "load" });
+        const layout = await page.locator(".cta-band .split").evaluate((split) => {
+          const button = split.querySelector(":scope > .button");
+          const splitBox = split.getBoundingClientRect();
+          const buttonBox = button.getBoundingClientRect();
+          return {
+            buttonWidth: buttonBox.width,
+            rightInset: splitBox.right - buttonBox.right,
+          };
+        });
+        assert.ok(layout.buttonWidth >= 44, `${route} at ${width}px keeps a usable closing CTA`);
+        assert.ok(
+          Math.abs(layout.rightInset) <= 1,
+          `${route} at ${width}px anchors the closing CTA to the container edge: ${layout.rightInset}`,
+        );
         await context.close();
       }
     }
