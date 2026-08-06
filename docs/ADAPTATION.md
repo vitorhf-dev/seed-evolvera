@@ -118,6 +118,8 @@ All sample paths are contracts, not files to invent: create a path only when the
 5. Update `blueprint.json` descriptively, the fixed structural inventory and any browser journey together. The manifest is never the sole oracle: the HTML, filesystem and tests must independently agree.
 6. Re-run the read-only structure/server checks, then the serial browser checks. Review the source fingerprint and `git diff --check` before publication.
 
+The default `.section-head` stays a two-column split (4fr/8fr from 768px). The optional `section-head--stacked` modifier is opt-in per section: it collapses that one head to a single track so its description reads below the heading on the same left edge. It exists for a single reading block — the canonical Home route-choice section is the intentional example — and is never applied globally or used to restyle every header.
+
 ### Navigation, catalog rail, RFQ, and resource omission rules
 
 - Keep the desktop header nav grouped and bounded as a secondary surface with one `aria-current` page, and keep one pill-shaped primary header CTA.

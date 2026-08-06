@@ -366,3 +366,88 @@ test("Home mobile first viewport and native no-JS navigation remain complete", a
     await new Promise((resolve) => server.close(resolve));
   }
 });
+
+test("the opt-in stacked section head reads as one left-aligned column without changing default heads", async () => {
+  const origin = await listen();
+  const browser = await chromium.launch({ headless: true });
+
+  try {
+    for (const width of [390, 1440]) {
+      const context = await browser.newContext({
+        viewport: { width, height: 900 },
+        javaScriptEnabled: false,
+        reducedMotion: "reduce",
+      });
+      const page = await context.newPage();
+      await page.route("**/*", async (requestRoute) => {
+        const url = new URL(requestRoute.request().url());
+        if (url.hostname !== "127.0.0.1") {
+          await requestRoute.abort("blockedbyclient");
+          return;
+        }
+        await requestRoute.continue();
+      });
+      await page.goto(origin + "/", { waitUntil: "load" });
+
+      const layout = await page.evaluate(() => {
+        const read = (head) => {
+          const description = head.querySelector(":scope > p");
+          const headingBlock = head.querySelector(":scope > div");
+          const headBox = head.getBoundingClientRect();
+          const headingBox = headingBlock.getBoundingClientRect();
+          const descriptionBox = description.getBoundingClientRect();
+          return {
+            trackCount: getComputedStyle(head).gridTemplateColumns.trim().split(/\s+/).filter(Boolean).length,
+            headLeft: headBox.left,
+            headRight: headBox.right,
+            headingBottom: headingBox.bottom,
+            descriptionTop: descriptionBox.top,
+            descriptionLeft: descriptionBox.left,
+            descriptionRight: descriptionBox.right,
+          };
+        };
+        return {
+          stacked: read(document.querySelector('[data-component="route-choice"] .section-head')),
+          stackedModifierCount: document.querySelectorAll(".section-head--stacked").length,
+          defaults: [...document.querySelectorAll(".section-head:not(.section-head--stacked)")].map(read),
+          overflows: document.documentElement.scrollWidth > window.innerWidth,
+        };
+      });
+
+      assert.equal(layout.stackedModifierCount, 1, `${width}px: the modifier stays a single intentional example`);
+      assert.equal(layout.overflows, false, `${width}px: the stacked head does not overflow`);
+      assert.equal(layout.stacked.trackCount, 1, `${width}px: the stacked head keeps one grid track`);
+      assert.ok(
+        layout.stacked.descriptionTop >= layout.stacked.headingBottom - 1,
+        `${width}px: the description begins below the heading block: ${layout.stacked.descriptionTop} vs ${layout.stacked.headingBottom}`,
+      );
+      assert.ok(
+        Math.abs(layout.stacked.descriptionLeft - layout.stacked.headLeft) <= 1,
+        `${width}px: the description aligns to the head left edge: ${layout.stacked.descriptionLeft} vs ${layout.stacked.headLeft}`,
+      );
+      assert.ok(
+        layout.stacked.descriptionRight <= layout.stacked.headRight + 1,
+        `${width}px: the description stays inside the head: ${layout.stacked.descriptionRight} vs ${layout.stacked.headRight}`,
+      );
+
+      assert.ok(layout.defaults.length > 0, `${width}px: default heads are still present`);
+      for (const head of layout.defaults) {
+        assert.equal(
+          head.trackCount,
+          width >= 768 ? 2 : 1,
+          `${width}px: default heads keep their own layout, got ${head.trackCount} tracks`,
+        );
+        if (width >= 768) {
+          assert.ok(
+            head.descriptionTop < head.headingBottom,
+            `${width}px: default heads keep the description beside the heading: ${head.descriptionTop} vs ${head.headingBottom}`,
+          );
+        }
+      }
+      await context.close();
+    }
+  } finally {
+    await browser.close();
+    await new Promise((resolve) => server.close(resolve));
+  }
+});

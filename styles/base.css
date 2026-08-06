@@ -188,6 +188,10 @@ ul, ol {
   .section-head {
     grid-template-columns: 4fr 8fr;
   }
+  /* Opt-in per section: the description keeps reading below the heading block, on the same left edge. */
+  .section-head--stacked {
+    grid-template-columns: minmax(0,1fr);
+  }
   .grid.two {
     grid-template-columns: repeat(2,minmax(0,1fr));
   }
@@ -205,6 +209,10 @@ ul, ol {
   }
   .section-head {
     gap: var(--space-7);
+  }
+  /* The wide column gap is horizontal breathing room; stacked heads keep the tighter vertical rhythm. */
+  .section-head--stacked {
+    gap: var(--space-5);
   }
 }
 
