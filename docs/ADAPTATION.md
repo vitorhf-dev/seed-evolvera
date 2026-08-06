@@ -62,7 +62,9 @@ Use one verified local product render or technical diagram as a contained object
 
 ### `no-media`
 
-This is the default and canonical hero state. No media column is reserved at any width: the hero grid remains one column and the copy measure expands into intentional negative space. The editorial index rail is a compact, border-led visual rail (maximum 64px), not a boxed `technical-field` column, placeholder, broken image or “imagem em breve”. The existing shell keeps it after the copy and trust cue; its ordinal is decorative and the visible `[[...]]` label remains an editable blueprint marker. The section-level `technical-field` utility may provide a low-contrast atmospheric rule field, but it must never create a media slot. No client image or video asset is needed for this state.
+This is the default and canonical hero state, and it is **copy-only**. The `.hero-grid` carries exactly one direct child: the copy block. No media column is reserved at any width. Below 1024px the copy fills the full grid width; from 1024px it is capped at the `--reading` measure (720px) and centered with automatic inline margins. The text itself stays left-aligned — only the block moves.
+
+Forbidden in this state, at any width: an editorial index rail, a decorative ordinal such as `01 / 06`, a placeholder or “imagem em breve” label, a broken or invented image, a boxed `technical-field` balancing field, and any reserved or empty second column. The section-level `technical-field` utility may still provide a low-contrast atmospheric rule field, but it must never create a media slot. No client image or video asset is needed for this state.
 
 ```html
 <section class="hero hero--editorial no-media" data-component="hero">
@@ -71,17 +73,15 @@ This is the default and canonical hero state. No media column is reserved at any
       <!-- breadcrumb? → eyebrow → h1 → lead → hero-facts? → actions → trust cue -->
       [[COPY-FIRST HERO CONTENT]]
     </div>
-    <div class="hero-media hero-media--editorial" aria-hidden="true">
-      <p class="index">01 / 06</p>
-      <p>[[FAMÍLIAS / CAPACIDADES A SUBSTITUIR]]</p>
-    </div>
   </div>
 </section>
 ```
 
+`editorial-no-media` in `blueprint.json` (`mediaContracts.heroVariants` and `defaultHeroVariant`) is the stable identifier of this copy-only baseline, not an instruction to author a rail. The `.hero-media--editorial` CSS class is legacy compatibility vocabulary for adaptations that still carry it; it is not exempt from `.hero.no-media` hiding and must not appear in canonical seed markup.
+
 ### Hero variants
 
-The allowed variants are exactly `hero-media--image`, `hero-media--video`, `hero-media--product`, `hero-media--diagram` and `hero-media--editorial` for the canonical no-media baseline. Keep the DOM copy-first order on every variant: `breadcrumb?` → `eyebrow` → `h1` → `lead` → `hero-facts?` → `actions` → trust cue → `hero-media`. The media follows the trust cue on mobile as well as in source order, so the headline, lead, action and honesty cue never depend on it.
+The canonical baseline has no `hero-media` child at all. When verified local media is supplied, the allowed variants are exactly `hero-media--image`, `hero-media--video`, `hero-media--product` and `hero-media--diagram`; `hero-media--editorial` remains only as legacy compatibility vocabulary and is never added to new markup. Keep the DOM copy-first order on every variant: `breadcrumb?` → `eyebrow` → `h1` → `lead` → `hero-facts?` → `actions` → trust cue → `hero-media`. The media follows the trust cue on mobile as well as in source order, so the headline, lead, action and honesty cue never depend on it.
 
 ```html
 <!-- supplied image: fixed-ratio cover frame; width/height prevent layout shift -->
@@ -105,12 +105,6 @@ The allowed variants are exactly `hero-media--image`, `hero-media--video`, `hero
   <img src="../../assets/diagrams/material-stack.svg" width="640" height="420" alt="[[Relações técnicas fornecidas]]">
   <figcaption>[[Legenda, unidade e fonte]]</figcaption>
 </figure>
-
-<!-- canonical editorial no-media rail: it does not reserve a media column -->
-<div class="hero-media hero-media--editorial" aria-hidden="true">
-  <p class="index">01 / 06</p>
-  <p>[[FAMÍLIAS / CAPACIDADES A SUBSTITUIR]]</p>
-</div>
 ```
 
 All sample paths are contracts, not files to invent: create a path only when the asset is supplied, approved and tested. The optional local video requires a factual poster, `controls`, `muted`, `playsinline` and `preload="metadata"`; it is never required for understanding. If that video is poster-less or errors, the existing fail-open behavior hides the video and stamps `no-media` on its `.hero-media` wrapper. CSS removes the wrapper from layout and the hero stays a single-column editorial composition; no empty frame or reserved grid cell remains. Missing or unapproved images are not replaced with invented assets or placeholders. All hero variants cover `img`, `picture`, `svg` and `video` consistently. Respect `prefers-reduced-motion`. Use `data-gallery-section`, `data-gallery-item` and `data-gallery-image` only for an actual local gallery, with captions, dialog labels and keyboard/close behavior preserved.

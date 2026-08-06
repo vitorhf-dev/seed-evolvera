@@ -405,7 +405,7 @@ noscript.notice {
   background: var(--color-dark-soft);
 }
 
-/* The editorial default is an index rail, not a reserved field: content-bearing and never taller than 64px. */
+/* Adaptation-only compatibility vocabulary: never authored in the canonical no-media hero, and still hidden by `.hero.no-media`. */
 .hero-media--editorial {
   display: flex;
   align-items: baseline;
@@ -438,7 +438,7 @@ noscript.notice {
   color: var(--color-surface-strong);
 }
 
-.hero.no-media .hero-media:not(.hero-media--editorial),
+.hero.no-media .hero-media,
 .hero-media.no-media {
   display: none;
 }
@@ -1062,6 +1062,13 @@ body.js-enhanced .mobile-nav[open] nav {
 @media (min-width:1024px) {
   .hero-grid > :first-child {
     max-width: calc(var(--container) / 12 * 8);
+  }
+  /* Without active media the copy is the whole composition: it is centered at the reading measure but stays left-aligned. */
+  .hero.no-media .hero-grid > :first-child,
+  .hero-grid:not(:has(> .hero-media--image:not(.no-media))):not(:has(> .hero-media--product:not(.no-media))):not(:has(> .hero-media--diagram:not(.no-media))):not(:has(> .hero-media--video:not(.no-media))) > :first-child {
+    width: 100%;
+    max-width: var(--reading);
+    margin-inline: auto;
   }
 }
 

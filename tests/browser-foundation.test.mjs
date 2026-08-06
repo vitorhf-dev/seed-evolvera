@@ -92,12 +92,12 @@ test("six pages render locally without JavaScript at all foundation widths", asy
   }
 });
 
-test("canonical no-media heroes reserve one grid column at tablet and desktop widths", async () => {
+test("canonical no-media heroes are one copy-only track that centers at the reading measure on desktop", async () => {
   const origin = await listen();
   const browser = await chromium.launch({ headless: true });
 
   try {
-    for (const width of [768, 1440]) {
+    for (const width of viewports) {
       for (const route of routes) {
         const context = await browser.newContext({
           viewport: { width, height: 844 },
@@ -117,16 +117,47 @@ test("canonical no-media heroes reserve one grid column at tablet and desktop wi
         const layout = await page.locator(".hero-grid").evaluate((heroGrid) => {
           const style = getComputedStyle(heroGrid);
           const tracks = style.gridTemplateColumns.trim().split(/\s+/).filter(Boolean);
-          const rail = heroGrid.querySelector(":scope > .hero-media--editorial");
+          const children = [...heroGrid.children];
+          const copy = children[0];
+          const gridBox = heroGrid.getBoundingClientRect();
+          const copyBox = copy.getBoundingClientRect();
           return {
             trackCount: tracks.length,
-            railHeight: rail?.getBoundingClientRect().height ?? 0,
-            railDisplay: rail ? getComputedStyle(rail).display : "missing",
+            childCount: children.length,
+            mediaChildCount: heroGrid.querySelectorAll(":scope > .hero-media").length,
+            gridWidth: gridBox.width,
+            copyWidth: copyBox.width,
+            leftInset: copyBox.left - gridBox.left,
+            rightInset: gridBox.right - copyBox.right,
+            textAlign: getComputedStyle(copy).textAlign,
           };
         });
         assert.equal(layout.trackCount, 1, `${route} at ${width}px has no reserved media column`);
-        assert.ok(layout.railHeight <= 64, `${route} at ${width}px editorial rail stays compact`);
-        assert.notEqual(layout.railDisplay, "none", `${route} at ${width}px keeps the editorial rail`);
+        assert.equal(layout.childCount, 1, `${route} at ${width}px has a copy-only hero grid`);
+        assert.equal(layout.mediaChildCount, 0, `${route} at ${width}px has no media or rail child`);
+        // `start` is the untouched initial value and resolves to left in this LTR document.
+        assert.ok(
+          ["left", "start"].includes(layout.textAlign),
+          `${route} at ${width}px keeps left-aligned copy, got ${layout.textAlign}`,
+        );
+
+        if (width >= 1024) {
+          const expected = Math.min(720, layout.gridWidth);
+          assert.ok(
+            Math.abs(layout.copyWidth - expected) <= 1,
+            `${route} at ${width}px holds the reading measure: ${layout.copyWidth} vs ${expected}`,
+          );
+          assert.ok(layout.leftInset > 1, `${route} at ${width}px has a nonzero left inset: ${layout.leftInset}`);
+          assert.ok(
+            Math.abs(layout.leftInset - layout.rightInset) <= 1,
+            `${route} at ${width}px centers the copy: ${layout.leftInset} vs ${layout.rightInset}`,
+          );
+        } else {
+          assert.ok(
+            Math.abs(layout.copyWidth - layout.gridWidth) <= 1,
+            `${route} at ${width}px fills the hero grid: ${layout.copyWidth} vs ${layout.gridWidth}`,
+          );
+        }
         await context.close();
       }
     }

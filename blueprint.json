@@ -169,7 +169,7 @@
     "modes": {
       "media-rich": "Optional verified local media fills the prescribed component region when supplied, with factual dimensions and context.",
       "media-light": "Optional verified local media appears as a contained, captioned inset plate; it never becomes a requirement for the page.",
-      "no-media": "Canonical media-free mode: no media column is reserved; the editorial index rail carries the copy-first composition, and failed media collapses back to it without an empty frame."
+      "no-media": "Canonical media-free mode: the hero is copy-only, with no reserved column, rail, ordinal or placeholder; the left-aligned copy block fills the grid below 1024px, centers at the 720px reading measure above it, and failed media collapses back to this baseline without an empty frame."
     },
     "heroVariants": [
       "image",
