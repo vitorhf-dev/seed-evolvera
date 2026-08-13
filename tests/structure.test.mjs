@@ -122,6 +122,16 @@ test("semantic token/color authority, media contracts and static package are fix
   assert.doesNotMatch(base, /#[0-9a-f]{3,8}\b|rgba?\(/i);
   assert.doesNotMatch(components, /#[0-9a-f]{3,8}\b|rgba?\(/i);
   for (const contract of [".media-rich", ".media-light", ".no-media", ".hero-media--image", ".hero-media--video", ".hero-media--product", ".hero-media--diagram", ".hero-media--editorial"]) assert.match(components, new RegExp(`\\${contract}`));
+  for (const density of [".sector", ".sector-list"]) assert.match(components, new RegExp(`\\${density}\\s*[,{]`), `${density} density contract is declared`);
+  // Served assets leave the adaptation write-scope untouched, so a marker kept here reaches production
+  // verbatim. Adaptation data belongs in HTML, which the adapter can actually edit.
+  for (const module of runtimeModules) {
+    assert.doesNotMatch(readFileSync(module, "utf8"), /\[\[|\[SUBSTITUIR\]|\[A CONFIRMAR\]/, `${module}: no adaptation marker in a served script`);
+  }
+  for (const sheet of ["styles/tokens.css", "styles/base.css", "styles/components.css"]) {
+    assert.doesNotMatch(readFileSync(sheet, "utf8"), /\[\[|\[SUBSTITUIR\]|\[A CONFIRMAR\]/, `${sheet}: no adaptation marker in a served stylesheet`);
+  }
+  assert.match(components, /\.surface \.card\s*\{[\s\S]*?border-color:\s*transparent/, "cards on a tinted stage drop the duplicate boundary");
   assert.deepEqual(blueprint.mediaModes, ["media-rich", "media-light", "no-media"]);
   assert.deepEqual(blueprint.mediaContracts.heroVariants, ["image", "local-video", "product-or-diagram", "editorial-no-media"]);
   assert.equal(pkg.private, true);

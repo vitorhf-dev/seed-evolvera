@@ -10,17 +10,27 @@ const errors = {
   application: "Descreva a aplicação ou o contexto.",
   message: "Inclua uma mensagem com o requisito.",
 };
-const contextMap = new Map([
-  ["produto:[[PRODUTO.SLUG]]", { type: "produto", reference: "[[PRODUTO.SLUG]]", label: "[[PRODUTO.NOME]]" }],
-  ["servico:[[SERVICO.SLUG]]", { type: "servico", reference: "[[SERVICO.SLUG]]", label: "[[SERVICO.NOME]]" }],
-]);
+/* The context map is authored in the page, never in this module. This script is served verbatim and
+   is outside the adaptation write-scope, so any catalog literal kept here would reach production
+   unchanged. Reading it from the document keeps the data where it can actually be adapted, and an
+   absent or malformed block yields an empty map so the form falls back to the generic inquiry path. */
+function readContextMap() {
+  const source = document.querySelector("template[data-inquiry-context]");
+  if (!source) return new Map();
+  const entries = [...source.content.querySelectorAll("[data-context-type][data-context-reference]")];
+  return new Map(entries.map((entry) => {
+    const type = entry.dataset.contextType;
+    const reference = entry.dataset.contextReference;
+    return [`${type}:${reference}`, { type, reference, label: entry.dataset.contextLabel || reference }];
+  }));
+}
 
 function contextFromQuery() {
   const params = new URLSearchParams(window.location.search);
   const type = params.get("tipo") || params.get("type");
   const reference = params.get("ref") || params.get("reference");
   if (!type || !reference) return null;
-  const context = contextMap.get(`${type}:${reference}`);
+  const context = readContextMap().get(`${type}:${reference}`);
   return context ? { ...context } : null;
 }
 

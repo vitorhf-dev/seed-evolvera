@@ -116,6 +116,10 @@
             <p>
               Use dados profissionais e não inclua informações sensíveis desnecessárias.
             </p>
+            <template data-inquiry-context>
+              <span data-context-type="produto" data-context-reference="[[PRODUTO.SLUG]]" data-context-label="[[PRODUTO.NOME]]"></span>
+              <span data-context-type="servico" data-context-reference="[[SERVICO.SLUG]]" data-context-label="[[SERVICO.NOME]]"></span>
+            </template>
             <form aria-label="Solicitação de avaliação técnica" data-inquiry-form novalidate>
               <p>
                 Campos marcados com * são obrigatórios.

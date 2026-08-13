@@ -488,6 +488,17 @@ noscript.notice {
   box-shadow: var(--shadow-lifted);
 }
 
+/* On a tinted stage the surface tone already separates the card, so the control border would be a
+   second boundary doing the same work. The border returns on hover/focus, where it reports state. */
+.surface .card {
+  border-color: transparent;
+}
+
+.surface .card:hover,
+.surface .card:focus-within {
+  border-color: var(--color-ink-soft);
+}
+
 .card p {
   flex: 1;
 }
@@ -623,6 +634,40 @@ noscript.notice {
 .process strong {
   display: block;
   margin-bottom: 8px;
+}
+
+/* Density contract. A set whose items carry only a name has no card content to justify a card, and
+   twenty 76px boxes read as filler rather than as information. The compact list keeps every label
+   discoverable and keyboard-reachable at the same 44px target, in a fraction of the vertical space.
+   Use `.sector` when each item has distinct verified copy; use `.sector-list` when it does not. */
+.sector-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sector-list li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: 8px 14px;
+  border: var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--color-paper);
+}
+
+/* The same accent dot as `.sector`, at chip scale, so the two densities read as one family. */
+.sector-list li::before {
+  content: "";
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: var(--color-accent);
 }
 
 .sector {

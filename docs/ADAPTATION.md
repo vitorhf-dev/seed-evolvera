@@ -32,6 +32,12 @@ Do not publish leadership, compatibility, availability, stock, pricing, performa
 
 Stable component families are `site-shell`, `hero`, `proof-rail`, `cards`, `split-feature`, `sectors`, `process`, `specifications`, `gallery`, `faq`, `cta` and `inquiry-form`. The browser entry is `scripts/main.js`; its local modules are `mobile-nav.js`, `scroll-lock.js`, `catalog-filter.js`, `gallery.js`, `faq.js`, `reveal.js`, `video.js` and `inquiry-form.js`. Preserve fail-open behavior and the native fallback of each module.
 
+### Density contract
+
+`sectors` ships two densities and the choice comes from the evidence, not from the layout. Use `.sector` inside `.grid` when each item carries distinct verified copy. Use `.sector-list` — a wrapping list of labels — when the items carry only a name, or when the set is large enough that one card per item would read as filler rather than as information. Both keep the 44px target and the accent dot, so the two densities read as one family.
+
+Never repeat an identical supporting sentence or call-to-action label across sibling items: state it once in the section lead and drop it from the items. A card on a tinted `.surface` stage drops its border, because the surface tone already separates it; the border returns on hover and focus, where it reports state.
+
 ## Media contracts
 
 Choose the media mode from the verified assets actually supplied, never from a layout wish. Media is optional: the canonical seed state is `no-media`, and the Home copy is complete without a client image or video. Use only checked-in local paths and facts about the asset. Preserve the existing 90% shell, local-only boundary, captions/alt text and no-invented-facts rules.
