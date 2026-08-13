@@ -488,8 +488,16 @@ noscript.notice {
   box-shadow: var(--shadow-lifted);
 }
 
-/* On a tinted stage the surface tone already separates the card, so the control border would be a
-   second boundary doing the same work. The border returns on hover/focus, where it reports state. */
+/* Elevation law: a border marks something you can operate (button, filter, input, chip); a shadow
+   marks a surface that merely holds content. On a tinted stage the surface tone already separates
+   the card, so the control border would be a second boundary doing the same work, and every content
+   box would read at the weight of a control. The border returns on hover/focus, where it reports
+   state. Process steps are content surfaces too, so they follow the same law. */
+.surface .process li {
+  border-color: transparent;
+  box-shadow: var(--shadow-raised);
+}
+
 .surface .card {
   border-color: transparent;
 }
@@ -1122,6 +1130,13 @@ body.js-enhanced .mobile-nav[open] nav {
      URL or contact value widens the track instead of wrapping, and the row escapes the container. */
   .split {
     grid-template-columns: minmax(0,5fr) minmax(0,7fr);
+  }
+  /* The closing invitation is text plus one action, not two balanced columns: sized as 5fr/7fr the
+     action sat alone at the far edge of a track wider than the sentence that justifies it. The track
+     now hugs the button, so the gap between message and action stays readable as one thought. */
+  .cta-band .split {
+    grid-template-columns: minmax(0,1fr) max-content;
+    align-items: center;
   }
   /* The closing CTA belongs at the container edge, not at the start of the wider second grid track. */
   .cta-band .split > .button {

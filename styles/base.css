@@ -185,8 +185,11 @@ ul, ol {
   .section {
     padding-block: var(--space-10);
   }
+  /* The heading takes the wide track. Reversed, the h2 was squeezed to a third of the container and
+     wrapped to three lines while its supporting sentence held two thirds — the heading is the load
+     the section carries, so it gets the room its 22ch measure already asks for. */
   .section-head {
-    grid-template-columns: 4fr 8fr;
+    grid-template-columns: 7fr 5fr;
   }
   /* Opt-in per section: the description keeps reading below the heading block, on the same left edge. */
   .section-head--stacked {
