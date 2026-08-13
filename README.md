@@ -8,10 +8,10 @@ This repository is the persistent blueprint: six inspectable HTML pages, modular
 - `/empresa/` — Empresa: institutional scope, process, contexts and evidence slots
 - `/catalogo/` — Catálogo: family filter, cards, selection help and FAQ
 - `/catalogo/solucao-exemplo/` — Solução exemplo: fit, specifications, gallery and related routes
-- `/servicos/capacidade-exemplo/` — Capacidade exemplo: scope, inputs, process and evidence slots
+- `/servicos/servico-exemplo/` — Capacidade exemplo: scope, inputs, process and evidence slots
 - `/contato/` — Contato técnico / RFQ: validated inquiry and direct-channel placeholders
 
-The six route files are `index.html`, `empresa/index.html`, `catalogo/index.html`, `catalogo/solucao-exemplo/index.html`, `servicos/capacidade-exemplo/index.html` and `contato/index.html`. Open any `index.html` directly, or start the dependency-free read-only loopback server:
+The six route files are `index.html`, `empresa/index.html`, `catalogo/index.html`, `catalogo/solucao-exemplo/index.html`, `servicos/servico-exemplo/index.html` and `contato/index.html`. Open any `index.html` directly, or start the dependency-free read-only loopback server:
 
 ```sh
 npm run serve

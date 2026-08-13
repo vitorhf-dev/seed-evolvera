@@ -639,7 +639,7 @@ test("with JavaScript enabled the no-JS notice remains present but unrendered", 
 });
 
 test("capability hero actions are keyboard reachable and keep their exact targets", async () => {
-  await withPage("/servicos/capacidade-exemplo/", {}, async (page) => {
+  await withPage("/servicos/servico-exemplo/", {}, async (page) => {
     const actions = await page.evaluate(() => {
       const links = [...document.querySelectorAll(".hero .actions a")];
       return links.map((link) => ({

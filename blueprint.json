@@ -63,8 +63,8 @@
       ]
     },
     {
-      "id": "capacidade-exemplo",
-      "path": "/servicos/capacidade-exemplo/",
+      "id": "servico-exemplo",
+      "path": "/servicos/servico-exemplo/",
       "sections": [
         "hero",
         "scope-exclusions",

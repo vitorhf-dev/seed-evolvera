@@ -8,7 +8,7 @@ const routes = [
   "/empresa/",
   "/catalogo/",
   "/catalogo/solucao-exemplo/",
-  "/servicos/capacidade-exemplo/",
+  "/servicos/servico-exemplo/",
   "/contato/",
 ];
 const viewports = [390, 768, 1440];

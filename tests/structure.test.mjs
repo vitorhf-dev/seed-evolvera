@@ -9,7 +9,7 @@ const expectedPages = [
   { id: "empresa", file: "empresa/index.html", route: "/empresa/", current: { label: "Empresa", href: "../empresa/index.html" }, sections: ["hero", "profile", "principles", "process", "sectors", "evidence", "faq-cta", "cta"] },
   { id: "catalogo", file: "catalogo/index.html", route: "/catalogo/", current: { label: "Catálogo", href: "../catalogo/index.html" }, sections: ["hero", "filter", "catalog-grid", "selection-help", "process-faq", "cta"] },
   { id: "solucao-exemplo", file: "catalogo/solucao-exemplo/index.html", route: "/catalogo/solucao-exemplo/", current: { label: "Catálogo", href: "../../catalogo/index.html" }, sections: ["hero", "fit-limits", "specifications", "gallery", "process-documents", "related", "faq-cta", "cta"] },
-  { id: "capacidade-exemplo", file: "servicos/capacidade-exemplo/index.html", route: "/servicos/capacidade-exemplo/", current: { label: "Capacidade", href: "../../servicos/capacidade-exemplo/index.html" }, sections: ["hero", "scope-exclusions", "process", "technical-inputs", "evidence", "sectors", "faq-cta", "cta"] },
+  { id: "servico-exemplo", file: "servicos/servico-exemplo/index.html", route: "/servicos/servico-exemplo/", current: { label: "Serviços", href: "../../servicos/servico-exemplo/index.html" }, sections: ["hero", "scope-exclusions", "process", "technical-inputs", "evidence", "sectors", "faq-cta", "cta"] },
   { id: "contato", file: "contato/index.html", route: "/contato/", current: { label: "Contato", href: "../contato/index.html" }, sections: ["hero", "form-direct-channels", "next-steps", "checklist-faq"] },
 ];
 
@@ -38,7 +38,7 @@ function readActiveFiles() {
 }
 
 test("fixed route, component, section, shell and current-page inventories agree", () => {
-  assert.deepEqual(expectedPages.map(({ file }) => file), ["index.html", "empresa/index.html", "catalogo/index.html", "catalogo/solucao-exemplo/index.html", "servicos/capacidade-exemplo/index.html", "contato/index.html"]);
+  assert.deepEqual(expectedPages.map(({ file }) => file), ["index.html", "empresa/index.html", "catalogo/index.html", "catalogo/solucao-exemplo/index.html", "servicos/servico-exemplo/index.html", "contato/index.html"]);
   const blueprint = JSON.parse(readFileSync("blueprint.json", "utf8"));
   assert.equal(blueprint.drivesGeneration, false);
   assert.deepEqual(blueprint.runtimeModules, runtimeModules);
@@ -158,7 +158,7 @@ const breadcrumbTrails = {
   "empresa/index.html": { home: "../index.html", parents: [], current: "Empresa" },
   "catalogo/index.html": { home: "../index.html", parents: [], current: "Catálogo" },
   "catalogo/solucao-exemplo/index.html": { home: "../../index.html", parents: [{ href: "../index.html", label: "Catálogo" }], current: "[[PRODUTO.NOME]]" },
-  "servicos/capacidade-exemplo/index.html": { home: "../../index.html", parents: [], current: "[[SERVICO.NOME]]" },
+  "servicos/servico-exemplo/index.html": { home: "../../index.html", parents: [], current: "[[SERVICO.NOME]]" },
   "contato/index.html": { home: "../index.html", parents: [], current: "Contato técnico" },
 };
 
@@ -199,7 +199,7 @@ test("inner routes expose one semantic breadcrumb with exact relative structure"
 });
 
 test("capability and product heroes carry their fixed conversion and orientation contracts", () => {
-  const capability = readFileSync("servicos/capacidade-exemplo/index.html", "utf8");
+  const capability = readFileSync("servicos/servico-exemplo/index.html", "utf8");
   assert.match(capability, /<a class="button" href="\.\.\/\.\.\/contato\/\?tipo=servico&amp;ref=\[\[SERVICO\.SLUG\]\]">\s*Solicitar avaliação desta capacidade\s*<\/a>/);
   assert.match(capability, /<a class="button secondary" href="#processo-capacidade">\s*Ver como funciona\s*<\/a>/);
   assert.equal((capability.match(/id="processo-capacidade"/g) ?? []).length, 1);

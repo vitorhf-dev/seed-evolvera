@@ -5,10 +5,10 @@ import { existsSync, readFileSync, statSync } from "node:fs";
 import { server } from "../tools/serve.mjs";
 
 const routes = [
-  "/", "/empresa/", "/catalogo/", "/catalogo/solucao-exemplo/", "/servicos/capacidade-exemplo/", "/contato/",
+  "/", "/empresa/", "/catalogo/", "/catalogo/solucao-exemplo/", "/servicos/servico-exemplo/", "/contato/",
 ];
 const canonicalFiles = [
-  "index.html", "empresa/index.html", "catalogo/index.html", "catalogo/solucao-exemplo/index.html", "servicos/capacidade-exemplo/index.html", "contato/index.html",
+  "index.html", "empresa/index.html", "catalogo/index.html", "catalogo/solucao-exemplo/index.html", "servicos/servico-exemplo/index.html", "contato/index.html",
   "styles/tokens.css", "styles/base.css", "styles/components.css",
   "scripts/main.js", "scripts/mobile-nav.js", "scripts/scroll-lock.js", "scripts/catalog-filter.js", "scripts/gallery.js", "scripts/faq.js", "scripts/reveal.js", "scripts/video.js", "scripts/inquiry-form.js",
   "assets/diagrams/material-stack.svg", "assets/diagrams/dimension-guide.svg", "assets/diagrams/process-map.svg", "blueprint.json",

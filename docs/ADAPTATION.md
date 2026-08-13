@@ -27,7 +27,7 @@ Do not publish leadership, compatibility, availability, stock, pricing, performa
 | `/empresa/` / `empresa/index.html` | `hero`, `profile`, `principles`, `process`, `sectors`, `evidence`, `faq-cta`, `cta` | factual role, operating scope, principles, service contexts, evidence and legal/contact content |
 | `/catalogo/` / `catalogo/index.html` | `hero`, `filter`, `catalog-grid`, `selection-help`, `process-faq`, `cta` | taxonomy, family data, labels, factual metadata and detail destinations |
 | `/catalogo/solucao-exemplo/` / `catalogo/solucao-exemplo/index.html` | `hero`, `fit-limits`, `specifications`, `gallery`, `process-documents`, `related`, `faq-cta`, `cta` | product name/slug, fit and limits, specifications, verified media/documents and related links |
-| `/servicos/capacidade-exemplo/` / `servicos/capacidade-exemplo/index.html` | `hero`, `scope-exclusions`, `process`, `technical-inputs`, `evidence`, `sectors`, `faq-cta`, `cta` | capability scope, exclusions, inputs, method/evidence and verified contexts |
+| `/servicos/servico-exemplo/` / `servicos/servico-exemplo/index.html` | `hero`, `scope-exclusions`, `process`, `technical-inputs`, `evidence`, `sectors`, `faq-cta`, `cta` | capability scope, exclusions, inputs, method/evidence and verified contexts |
 | `/contato/` / `contato/index.html` | `hero`, `form-direct-channels`, `next-steps`, `checklist-faq` | direct channels, approved legal/consent text and later transport integration |
 
 Stable component families are `site-shell`, `hero`, `proof-rail`, `cards`, `split-feature`, `sectors`, `process`, `specifications`, `gallery`, `faq`, `cta` and `inquiry-form`. The browser entry is `scripts/main.js`; its local modules are `mobile-nav.js`, `scroll-lock.js`, `catalog-filter.js`, `gallery.js`, `faq.js`, `reveal.js`, `video.js` and `inquiry-form.js`. Preserve fail-open behavior and the native fallback of each module.
@@ -143,7 +143,7 @@ Update and review every exact file—never implement a client-side include or ge
 - [ ] `empresa/index.html`
 - [ ] `catalogo/index.html`
 - [ ] `catalogo/solucao-exemplo/index.html`
-- [ ] `servicos/capacidade-exemplo/index.html`
+- [ ] `servicos/servico-exemplo/index.html`
 - [ ] `contato/index.html`
 
 For each file preserve `<!-- SHELL:HEADER START -->` / `END`, `<!-- SHELL:FOOTER START -->` / `END`, the skip link, `main#conteudo`, semantic header/footer, desktop and native `<details class="mobile-nav">` navigation, exactly one current-page link per navigation copy, the matching relative CSS/module paths, `lang="pt-BR"`, one `h1` and the seed `noindex,nofollow` until publication review. Update route labels/hrefs consistently in desktop nav, mobile nav and footer; then check all six files as a set.
@@ -156,7 +156,7 @@ For each file preserve `<!-- SHELL:HEADER START -->` / `END`, `<!-- SHELL:FOOTER
 | `empresa/index.html` | `../styles/...` | `../scripts/main.js` | `../index.html` | `../catalogo/index.html` | `../contato/index.html` |
 | `catalogo/index.html` | `../styles/...` | `../scripts/main.js` | `../index.html` | `../catalogo/index.html` | `../contato/index.html` |
 | `catalogo/solucao-exemplo/index.html` | `../../styles/...` | `../../scripts/main.js` | `../../index.html` | `../../catalogo/index.html` | `../../contato/index.html` |
-| `servicos/capacidade-exemplo/index.html` | `../../styles/...` | `../../scripts/main.js` | `../../index.html` | `../../catalogo/index.html` | `../../contato/index.html` |
+| `servicos/servico-exemplo/index.html` | `../../styles/...` | `../../scripts/main.js` | `../../index.html` | `../../catalogo/index.html` | `../../contato/index.html` |
 | `contato/index.html` | `../styles/...` | `../scripts/main.js` | `../index.html` | `../catalogo/index.html` | `../contato/index.html` |
 
 Audit every `href`, `src`, `poster` and form action after moving a file. Keep resources local; a relative path must resolve to a checked-in file.
