@@ -1118,8 +1118,10 @@ body.js-enhanced .mobile-nav[open] nav {
 }
 
 @media (min-width:768px) {
+  /* `minmax(0,…)` because a grid track defaults to `min-content`: without it an adapted long word,
+     URL or contact value widens the track instead of wrapping, and the row escapes the container. */
   .split {
-    grid-template-columns: 5fr 7fr;
+    grid-template-columns: minmax(0,5fr) minmax(0,7fr);
   }
   /* The closing CTA belongs at the container edge, not at the start of the wider second grid track. */
   .cta-band .split > .button {
