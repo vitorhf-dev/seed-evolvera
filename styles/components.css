@@ -537,7 +537,11 @@ noscript.notice {
   gap: var(--space-5);
 }
 
-/* The rail follows the comparison it annotates but stays bounded by the viewport instead of growing with the list. */
+/* The rail follows the comparison it annotates but stays bounded by the viewport instead of growing
+   with the list. What is pinned must earn the screen it occupies: carrying the heading and the
+   no-scripting notice, this rail stood 270px tall — 30% of a 900px viewport — and covered three
+   cards at a time for 1403px of scrolling. Those two read once and belong above the rail; only the
+   controls need to persist, so only they are pinned. */
 .catalog-rail {
   position: sticky;
   top: var(--space-4);
@@ -767,11 +771,20 @@ details p {
   box-shadow: var(--shadow-raised);
 }
 
+/* The result count answers the buttons beside it, so it shares their row instead of adding a line to
+   a surface that stays on screen; `margin-left:auto` parks it at the far edge when there is room. */
 .filter-controls {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: var(--space-2);
-  margin-bottom: var(--space-4);
+}
+
+.filter-controls > [data-filter-count] {
+  margin: 0;
+  margin-left: auto;
+  color: var(--color-ink-soft);
+  font-size: .875rem;
 }
 
 .filter button {

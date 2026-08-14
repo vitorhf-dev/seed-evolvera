@@ -291,6 +291,29 @@ test("catalog rail stays inside the comparison it annotates at every foundation 
   }
 });
 
+// What is pinned costs screen for as long as the comparison lasts. The rail once carried the heading
+// and the no-scripting notice, stood 270px on a 900px viewport and covered three cards at a time; the
+// ceiling keeps that content above the rail instead of inside it.
+test("the pinned rail stays a control strip, not a panel", async () => {
+  for (const [width, height] of [[1440, 900], [390, 844]]) {
+    await withPage("/catalogo/", { contextOptions: { viewport: { width, height } } }, async (page) => {
+      const rail = await page.evaluate(() => {
+        const element = document.querySelector(".catalog-rail");
+        return {
+          height: Math.round(element.getBoundingClientRect().height),
+          holdsHeading: Boolean(element.querySelector("h1, h2, h3")),
+          keepsControls: Boolean(element.querySelector("[data-filter]")),
+          keepsCount: Boolean(element.querySelector("[data-filter-count]")),
+        };
+      });
+      assert.equal(rail.holdsHeading, false, `${width}px: the heading reads once and stays above the rail`);
+      assert.equal(rail.keepsControls, true, `${width}px: the controls are what must follow the comparison`);
+      assert.equal(rail.keepsCount, true, `${width}px: the count answers the controls it travels with`);
+      assert.ok(rail.height <= height * 0.2, `${width}px: pinned rail is ${rail.height}px, over 20% of the ${height}px viewport`);
+    });
+  }
+});
+
 test("narrow catalog controls scroll horizontally instead of overflowing the document", async () => {
   await withPage("/catalogo/", {}, async (page) => {
     const controls = page.locator(".catalog-rail__controls");

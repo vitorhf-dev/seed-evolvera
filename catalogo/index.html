@@ -113,14 +113,18 @@
       </section>
       <section class="section catalog-comparison" data-component="filter">
         <div class="container">
-          <!-- The rail is a block child of this container so its sticky lifespan spans the whole card comparison below. -->
-          <div class="filter catalog-rail" data-catalog-filter>
+          <!-- The title and the no-scripting notice read once and stay behind; only the controls need to
+               follow the comparison, so they are the only thing inside the pinned rail. -->
+          <header class="section-head section-head--stacked">
             <h2>
               Filtrar famílias
             </h2>
             <p>
               Todos os itens estão visíveis. Ative JavaScript para filtrar nesta página.
             </p>
+          </header>
+          <!-- The rail is a block child of this container so its sticky lifespan spans the whole card comparison below. -->
+          <div class="filter catalog-rail" data-catalog-filter>
             <div class="filter-controls">
               <div class="catalog-rail__controls" role="group" aria-label="Filtrar famílias por categoria">
                 <button type="button" data-filter="all" aria-pressed="true">
@@ -133,6 +137,10 @@
                   [[CATEGORIA 02]]
                 </button>
               </div>
+              <p data-filter-count aria-live="polite">
+                6 famílias encontradas
+              </p>
+              <button type="button" data-filter-reset hidden>Limpar filtros</button>
             </div>
             <nav class="filter-fallback" aria-label="Categorias sem JavaScript">
               <a href="#catalogo-familias">
@@ -145,10 +153,6 @@
                 [[CATEGORIA 02]]
               </a>
             </nav>
-            <p data-filter-count aria-live="polite">
-              6 famílias encontradas
-            </p>
-            <button type="button" data-filter-reset hidden>Limpar filtros</button>
             <p data-filter-empty hidden>Nenhuma família corresponde aos filtros.</p>
           </div>
           <section class="section catalog-comparison__layout" id="catalogo-familias" data-component="catalog-grid">
