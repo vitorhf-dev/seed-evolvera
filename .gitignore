@@ -5,5 +5,9 @@ coverage/
 test-results/
 playwright-report/
 *.tsbuildinfo
+# Saída de sessão do PI: regenerável. Regras explícitas em vez de ignorar `.pi/` inteiro,
+# para que conhecimento durável (skills, memory) não seja engolido em silêncio se um dia existir.
 .pi/build/
-.pi/
+.pi/recovery/
+.pi/handoff/
+.pi/plans/
