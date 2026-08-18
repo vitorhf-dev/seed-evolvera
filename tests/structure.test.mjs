@@ -135,6 +135,8 @@ test("semantic token/color authority, media contracts and static package are fix
   assert.match(components, /\.card:hover,\s*\.card:focus-within\s*\{[^}]*?border-color:\s*var\(--color-ink-soft\);[^}]*?box-shadow:\s*var\(--shadow-lifted\)/, "the card border returns on hover and focus");
   assert.doesNotMatch(components, /\.surface \.card\s*[,{]/, "the resting boundary no longer depends on the stage tint");
   assert.match(components, /\.process li\s*\{[^}]*?border-color:\s*transparent;[^}]*?box-shadow:\s*var\(--shadow-raised\)/, "process steps follow the same one-boundary law");
+  assert.match(components, /\.sector-list:not\(:last-child\)\s*\{[^}]*?margin-bottom:\s*var\(--space-5\)/, "a compact list followed by its shared action carries the gap");
+  assert.match(components, /:is\(\.hero\.dark, \.dark-band, \.cta-band, \.panel, \.site-footer\) \.process li\s*\{[^}]*?border-color:\s*var\(--color-line-strong\)/, "on a dark stage the step keeps the only boundary that is visible there");
   assert.match(components, /\.card > \.media-frame,\s*\.card > \[class\*="-plate"\],\s*\.card > \[class\*="-mark"\]\s*\{[^}]*?border-color:\s*transparent;[^}]*?box-shadow:\s*none/, "a decorative wrapper directly inside a card adds no second boundary");
   assert.deepEqual(blueprint.mediaModes, ["media-rich", "media-light", "no-media"]);
   assert.deepEqual(blueprint.mediaContracts.heroVariants, ["image", "local-video", "product-or-diagram", "editorial-no-media"]);
@@ -299,7 +301,11 @@ test("active docs do not revive generation and final guides/resources exist", ()
   assert.match(adaptation, /shared call-to-action, a shared eyebrow\/kicker, a decorative media\/plate\/mark, or a generic one-line sentence is not card-worthy content/, "shared chrome does not justify a card");
   assert.match(adaptation, /route-choice and catalog\/product families stay cards/, "real distinct content keeps its cards");
   assert.match(adaptation, /compact list such as `\.sector-list`, with one shared section call-to-action/, "shallow families go to a compact list with one shared CTA");
-  assert.match(adaptation, /A card carries exactly one resting boundary: the raised shadow, on every stage/, "the one-boundary law is documented");
+  assert.match(adaptation, /A card carries exactly one resting boundary on a light stage: the raised shadow/, "the one-boundary law is documented");
+  // The law had claimed "on every stage"; a step has no background, so on a dark stage the shadow
+  // vanishes and the sentence has to name the exception instead of hiding it.
+  assert.match(adaptation, /on a dark stage the shadow is invisible and the control line becomes its only separator/, "the dark-stage exception is stated, not implied");
+  assert.match(adaptation, /`\.sector-list` takes a bottom margin whenever something follows it/, "the shared action's spacing belongs to the seed, not to an invented class");
   assert.match(readFileSync("docs/BOSTOIDE_ADAPTER.md", "utf8"), /complete local dependency closure/i);
   assert.match(readFileSync("docs/TESTING.md", "utf8"), /NO_STATEFUL_RESOURCES/);
 });

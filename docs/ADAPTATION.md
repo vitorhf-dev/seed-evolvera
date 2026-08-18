@@ -40,7 +40,9 @@ Never repeat an identical supporting sentence or call-to-action label across sib
 
 The same rule decides the card itself. In a repeated sibling family, a shared call-to-action, a shared eyebrow/kicker, a decorative media/plate/mark, or a generic one-line sentence is not card-worthy content: it is chrome repeated N times, and it does not turn a shallow item into a card. Count only what differs between the siblings. Keep cards when each item carries real distinct content — the route-choice and catalog/product families stay cards — and move shallow families to a compact list such as `.sector-list`, with one shared section call-to-action instead of one per item.
 
-A card carries exactly one resting boundary: the raised shadow, on every stage, tinted or not. Its border stays transparent at rest and returns on hover and focus, where it reports state. Process steps follow the same law. Do not nest a second boundary inside a card either: a decorative wrapper placed directly in a card keeps its background and spacing but not its own border or shadow.
+A card carries exactly one resting boundary on a light stage: the raised shadow, tinted or not. Its border stays transparent at rest and returns on hover and focus, where it reports state. Process steps follow the same law, with one exception the law itself requires: a step has no background of its own, so on a dark stage the shadow is invisible and the control line becomes its only separator. Do not nest a second boundary inside a card either: a decorative wrapper placed directly in a card keeps its background and spacing but not its own border or shadow.
+
+When a shallow family is followed by its one shared action, the compact list carries the gap: `.sector-list` takes a bottom margin whenever something follows it. Do not add a bespoke spacing class for that button — the composition is already spaced, and an invented class produces a different gap on every adaptation.
 
 ## Media contracts
 

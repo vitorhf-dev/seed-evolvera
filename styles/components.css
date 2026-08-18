@@ -627,6 +627,15 @@ noscript.notice {
   counter-increment: item;
 }
 
+/* The one-boundary law assumes a light stage, where the raised shadow reads against paper. A step
+   carries no background of its own, so on a dark stage the shadow disappears into the dark and a
+   transparent border would leave the step with no boundary at all. There the control line is the
+   only visible separator, and it is already contrast-checked against the dark token. */
+:is(.hero.dark, .dark-band, .cta-band, .panel, .site-footer) .process li {
+  border-color: var(--color-line-strong);
+  box-shadow: none;
+}
+
 /* The step ordinal is presentational: the visible step name always carries the meaning. */
 .process li::before {
   content: counter(item,decimal-leading-zero);
@@ -672,6 +681,16 @@ noscript.notice {
   border: var(--border);
   border-radius: var(--radius-sm);
   background: var(--color-paper);
+}
+
+/* The seed's vertical rhythm is carried by bottom margins: the reset zeroes `margin-top` on
+   headings and paragraphs and leaves their bottom margin intact. `margin: 0` above therefore did
+   more than remove list indentation — it deleted the gap that separates this list from whatever
+   follows it, and the density contract asks for exactly one shared action after a shallow family.
+   Four of five generated sites put that button flush against the last chip, at 0px. The margin is
+   conditional so a list that ends its section adds no trailing space to the section padding. */
+.sector-list:not(:last-child) {
+  margin-bottom: var(--space-5);
 }
 
 /* The same accent dot as `.sector`, at chip scale, so the two densities read as one family. */

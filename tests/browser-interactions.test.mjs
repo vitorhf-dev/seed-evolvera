@@ -690,3 +690,38 @@ test("capability hero actions are keyboard reachable and keep their exact target
     assert.deepEqual(target, { heading: "Etapas da capacidade", overflows: false });
   });
 });
+
+// The density contract sends a shallow family to `.sector-list` plus one shared action, but the seed
+// itself never composes that pair on any page, so no test rendered it and the CSS was never checked.
+// Four of five generated sites then shipped the button flush against the last chip. The composition
+// is built here because the contract prescribes it: a rule the seed asks adapters to use is a rule
+// the seed has to render at least once.
+test("a shallow family and its one shared action do not touch", async () => {
+  for (const [width, height] of [[1440, 900], [390, 844]]) {
+    await withPage("/", { contextOptions: { viewport: { width, height } } }, async (page) => {
+      const gaps = await page.evaluate(() => {
+        const host = document.querySelector("main .container");
+        const block = document.createElement("div");
+        block.innerHTML = `
+          <ul class="sector-list"><li>Alfa</li><li>Beta</li><li>Gama</li></ul>
+          <p><a class="button secondary" href="#contato">Compartilhar contexto</a></p>`;
+        host.append(block);
+        const list = block.querySelector(".sector-list");
+        const button = block.querySelector("a.button");
+        const gap = button.getBoundingClientRect().top - list.getBoundingClientRect().bottom;
+
+        // The same list ending its section must not push the section padding open.
+        const solo = document.createElement("div");
+        solo.innerHTML = `<ul class="sector-list"><li>Alfa</li></ul>`;
+        host.append(solo);
+        const trailing = getComputedStyle(solo.querySelector(".sector-list")).marginBottom;
+
+        block.remove();
+        solo.remove();
+        return { gap: Math.round(gap), trailing };
+      });
+      assert.ok(gaps.gap >= 16, `${width}px: the shared action sits ${gaps.gap}px from the chips`);
+      assert.equal(gaps.trailing, "0px", `${width}px: a list that ends its section adds no trailing gap`);
+    });
+  }
+});
