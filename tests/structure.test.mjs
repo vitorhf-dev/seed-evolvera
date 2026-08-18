@@ -131,7 +131,11 @@ test("semantic token/color authority, media contracts and static package are fix
   for (const sheet of ["styles/tokens.css", "styles/base.css", "styles/components.css"]) {
     assert.doesNotMatch(readFileSync(sheet, "utf8"), /\[\[|\[SUBSTITUIR\]|\[A CONFIRMAR\]/, `${sheet}: no adaptation marker in a served stylesheet`);
   }
-  assert.match(components, /\.surface \.card\s*\{[\s\S]*?border-color:\s*transparent/, "cards on a tinted stage drop the duplicate boundary");
+  assert.match(components, /\.card\s*\{[^}]*?border-color:\s*transparent;[^}]*?box-shadow:\s*var\(--shadow-raised\)/, "a card rests on one boundary: shadow only, transparent border");
+  assert.match(components, /\.card:hover,\s*\.card:focus-within\s*\{[^}]*?border-color:\s*var\(--color-ink-soft\);[^}]*?box-shadow:\s*var\(--shadow-lifted\)/, "the card border returns on hover and focus");
+  assert.doesNotMatch(components, /\.surface \.card\s*[,{]/, "the resting boundary no longer depends on the stage tint");
+  assert.match(components, /\.process li\s*\{[^}]*?border-color:\s*transparent;[^}]*?box-shadow:\s*var\(--shadow-raised\)/, "process steps follow the same one-boundary law");
+  assert.match(components, /\.card > \.media-frame,\s*\.card > \[class\*="-plate"\],\s*\.card > \[class\*="-mark"\]\s*\{[^}]*?border-color:\s*transparent;[^}]*?box-shadow:\s*none/, "a decorative wrapper directly inside a card adds no second boundary");
   assert.deepEqual(blueprint.mediaModes, ["media-rich", "media-light", "no-media"]);
   assert.deepEqual(blueprint.mediaContracts.heroVariants, ["image", "local-video", "product-or-diagram", "editorial-no-media"]);
   assert.equal(pkg.private, true);
@@ -290,6 +294,12 @@ test("active docs do not revive generation and final guides/resources exist", ()
   assert.match(readFileSync("README.md", "utf8"), /repository is the persistent blueprint/i);
   assert.match(readFileSync("README.md", "utf8"), /90%/);
   assert.match(readFileSync("docs/ADAPTATION.md", "utf8"), /six-file shell checklist/i);
+  const adaptation = readFileSync("docs/ADAPTATION.md", "utf8");
+  // The density contract is the seed's defense against card-shaped filler; its wording is load-bearing.
+  assert.match(adaptation, /shared call-to-action, a shared eyebrow\/kicker, a decorative media\/plate\/mark, or a generic one-line sentence is not card-worthy content/, "shared chrome does not justify a card");
+  assert.match(adaptation, /route-choice and catalog\/product families stay cards/, "real distinct content keeps its cards");
+  assert.match(adaptation, /compact list such as `\.sector-list`, with one shared section call-to-action/, "shallow families go to a compact list with one shared CTA");
+  assert.match(adaptation, /A card carries exactly one resting boundary: the raised shadow, on every stage/, "the one-boundary law is documented");
   assert.match(readFileSync("docs/BOSTOIDE_ADAPTER.md", "utf8"), /complete local dependency closure/i);
   assert.match(readFileSync("docs/TESTING.md", "utf8"), /NO_STATEFUL_RESOURCES/);
 });

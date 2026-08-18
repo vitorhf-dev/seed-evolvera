@@ -471,11 +471,18 @@ noscript.notice {
   color: var(--color-surface-strong);
 }
 
+/* Elevation law: a border marks something you can operate (button, filter, input, chip); a shadow
+   marks a surface that merely holds content. A content card therefore rests on the shadow alone, on
+   every stage: border plus shadow would be two boundaries doing one job, and every content box would
+   read at the weight of a control. The border is kept declared but transparent so hover/focus can
+   raise it without shifting layout by a pixel; it returns only there, where it reports state.
+   Process steps are content surfaces too, so they follow the same law. */
 .card {
   display: flex;
   flex-direction: column;
   padding: 24px;
   border: var(--border-control);
+  border-color: transparent;
   border-radius: var(--radius-md);
   background: var(--color-paper);
   box-shadow: var(--shadow-raised);
@@ -488,23 +495,16 @@ noscript.notice {
   box-shadow: var(--shadow-lifted);
 }
 
-/* Elevation law: a border marks something you can operate (button, filter, input, chip); a shadow
-   marks a surface that merely holds content. On a tinted stage the surface tone already separates
-   the card, so the control border would be a second boundary doing the same work, and every content
-   box would read at the weight of a control. The border returns on hover/focus, where it reports
-   state. Process steps are content surfaces too, so they follow the same law. */
-.surface .process li {
+/* Box-in-box compatibility. Adapters commonly wrap card content in one decorative visual wrapper
+   (`.media-frame`, a `*-plate` or a `*-mark`). Directly inside a card that wrapper would draw a
+   second resting boundary inside the first, so at rest it keeps its background, size and content
+   behavior and drops only its own border and shadow. Deliberately limited to direct children of a
+   card: standalone frames, plates and marks elsewhere are unaffected. */
+.card > .media-frame,
+.card > [class*="-plate"],
+.card > [class*="-mark"] {
   border-color: transparent;
-  box-shadow: var(--shadow-raised);
-}
-
-.surface .card {
-  border-color: transparent;
-}
-
-.surface .card:hover,
-.surface .card:focus-within {
-  border-color: var(--color-ink-soft);
+  box-shadow: none;
 }
 
 .card p {
@@ -621,7 +621,9 @@ noscript.notice {
   position: relative;
   padding: 24px;
   border: var(--border);
+  border-color: transparent;
   border-radius: var(--radius-md);
+  box-shadow: var(--shadow-raised);
   counter-increment: item;
 }
 
