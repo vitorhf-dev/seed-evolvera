@@ -169,15 +169,6 @@ ul, ol {
   padding-left: 1.25rem;
 }
 
-.publication-warning {
-  margin: 0;
-  padding: 10px 20px;
-  text-align: center;
-  background: var(--color-accent);
-  color: var(--color-paper);
-  font-weight: 700;
-}
-
 @media (min-width:768px) {
   .container {
     width: min(var(--container),calc(100% - 64px));

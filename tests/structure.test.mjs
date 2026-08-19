@@ -67,7 +67,10 @@ test("fixed route, component, section, shell and current-page inventories agree"
     assert.equal((html.match(/aria-label="Navegação principal móvel"/g) ?? []).length, 1);
     assert.deepEqual(currentLinks(html), [expected.current, expected.current, expected.current]);
     for (const marker of shellMarkers) assert.equal(html.includes(marker), true, `${expected.file}: ${marker}`);
-    assert.match(html, /Conteúdo de demonstração — substituir antes da publicação/);
+    // O banner de demonstração saiu da seed: aparecia só quando a adaptação não o removia, o que
+    // deixava o resultado inconsistente entre os fluxos com-site e no-site. Quem sinaliza conteúdo
+    // por substituir são os próprios marcadores, e o gate do pipeline já barra marcador servido.
+    assert.doesNotMatch(html, /Conteúdo de demonstração|publication-warning/);
   }
 });
 
@@ -135,10 +138,9 @@ test("semantic token/color authority, media contracts and static package are fix
   // prospective client that "this template needs a transport integration" and to "configure the
   // integration" — the same leak as an adaptation marker, in prose instead of brackets. Honesty about
   // what the form does is kept in the visitor's own terms, not in the seed's implementation terms.
-  // Não confundir com o andaime deliberado do blueprint (.publication-warning e os marcadores), que é
-  // visível de propósito para revisão humana e sai na adaptação — medido: zero em 5 sites gerados.
-  // O que se proíbe aqui é prosa que explica a arquitetura do template dentro do conteúdo real.
-  const vozDeInstalador = [/\bo template\b/i, /\beste template\b/i, /integração de transporte/i, /conclua a adaptação/i, /configure (?:um|a) (?:endpoint|integração)/i];
+  // Os marcadores de adaptação continuam visíveis de propósito para revisão humana; o que se proíbe
+  // aqui é prosa que explica a construção da página dentro do conteúdo servido.
+  const vozDeInstalador = [/\bo template\b/i, /\beste template\b/i, /integração de transporte/i, /conclua a adaptação/i, /antes da publicação/i, /configure (?:um|a) (?:endpoint|integração)/i];
   for (const { file } of expectedPages) {
     const texto = readFileSync(file, "utf8").replace(/<[^>]+>/g, " ");
     for (const frase of vozDeInstalador) {
