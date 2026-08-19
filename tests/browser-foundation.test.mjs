@@ -318,7 +318,7 @@ test("Contact states the no-JavaScript boundary directly before the inert contro
     });
 
     assert.deepEqual(notice, {
-      text: "A validação assistida requer JavaScript. Use um canal direto verificado.",
+      text: "A validação assistida requer JavaScript. Use um dos contatos desta página.",
       visible: true,
       precedesControl: true,
       links: 0,

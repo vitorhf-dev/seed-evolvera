@@ -3,7 +3,14 @@ import { after, afterEach, before, test } from "node:test";
 import { chromium } from "playwright";
 import { server } from "../tools/serve.mjs";
 
-const pendingText = "Os dados foram validados neste navegador, mas ainda não foram enviados. Este template precisa de uma integração de transporte. Seus dados permanecem preenchidos; use um canal direto abaixo ou configure a integração para continuar.";
+// Copy na voz de quem preenche, não na de quem instala a seed. A página de contato mostra canais
+// diretos, então a dica de canal aparece; numa página sem tel:/mailto:/wa.me ela some, porque
+// mandar "use um canal direto abaixo" sem canal algum foi defeito medido num site gerado.
+const pendingBase = "Dados validados. O envio online ainda não está disponível neste site.";
+// A seed lista os canais como marcadores de texto ([CONTATO.EMAIL]), não como links tel:/mailto:,
+// então a página crua não oferece canal clicável e a dica corretamente não aparece. Depois da
+// adaptação, com contato real linkado, a mesma mensagem ganha a dica.
+const pendingText = pendingBase;
 const fieldNames = ["inquiryType", "name", "company", "email", "phone", "reference", "application", "material", "dimensions", "standards", "quantity", "message"];
 const productQuery = "/contato/?tipo=produto&ref=%5B%5BPRODUTO.SLUG%5D%5D";
 const serviceQuery = "/contato/?tipo=servico&ref=%5B%5BSERVICO.SLUG%5D%5D";

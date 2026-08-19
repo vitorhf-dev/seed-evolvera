@@ -1,5 +1,16 @@
 const fieldNames = ["inquiryType", "name", "company", "email", "phone", "reference", "application", "material", "dimensions", "standards", "quantity", "message"];
-const validMessage = "Os dados foram validados neste navegador, mas ainda não foram enviados. Este template precisa de uma integração de transporte. Seus dados permanecem preenchidos; use um canal direto abaixo ou configure a integração para continuar.";
+// Texto para quem preenche o formulário, não para quem instala a seed. A versão anterior dizia
+// "este template precisa de uma integração de transporte... configure a integração", explicando a
+// própria arquitetura a um possível cliente — a mesma classe do vazamento de marcadores de adaptação.
+// A honestidade que importa continua: nunca afirmamos que foi enviado.
+const validMessage = "Dados validados. O envio online ainda não está disponível neste site.";
+// Só aponta canais quando a página de fato mostra um: a mensagem antiga mandava "use um canal
+// direto abaixo" mesmo em página sem telefone, e-mail ou WhatsApp algum.
+const channelHint = " Use um dos contatos desta página.";
+
+function hasDirectChannel() {
+  return Boolean(document.querySelector('a[href^="tel:"], a[href^="mailto:"], a[href*="wa.me"]'));
+}
 const errors = {
   inquiryType: "Selecione o tipo de solicitação.",
   name: "Informe seu nome.",
@@ -130,7 +141,7 @@ export function initInquiryForm() {
       cancelable: false,
       detail: { values: result.values, context },
     }));
-    status.textContent = validMessage;
+    status.textContent = hasDirectChannel() ? validMessage + channelHint : validMessage;
   };
   form.addEventListener("submit", submit);
   button.addEventListener("click", () => {

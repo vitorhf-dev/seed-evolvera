@@ -131,6 +131,20 @@ test("semantic token/color authority, media contracts and static package are fix
   for (const sheet of ["styles/tokens.css", "styles/base.css", "styles/components.css"]) {
     assert.doesNotMatch(readFileSync(sheet, "utf8"), /\[\[|\[SUBSTITUIR\]|\[A CONFIRMAR\]/, `${sheet}: no adaptation marker in a served stylesheet`);
   }
+  // Visible copy addresses whoever reads the site, never whoever installs it. The seed used to tell a
+  // prospective client that "this template needs a transport integration" and to "configure the
+  // integration" — the same leak as an adaptation marker, in prose instead of brackets. Honesty about
+  // what the form does is kept in the visitor's own terms, not in the seed's implementation terms.
+  // Não confundir com o andaime deliberado do blueprint (.publication-warning e os marcadores), que é
+  // visível de propósito para revisão humana e sai na adaptação — medido: zero em 5 sites gerados.
+  // O que se proíbe aqui é prosa que explica a arquitetura do template dentro do conteúdo real.
+  const vozDeInstalador = [/\bo template\b/i, /\beste template\b/i, /integração de transporte/i, /conclua a adaptação/i, /configure (?:um|a) (?:endpoint|integração)/i];
+  for (const { file } of expectedPages) {
+    const texto = readFileSync(file, "utf8").replace(/<[^>]+>/g, " ");
+    for (const frase of vozDeInstalador) {
+      assert.doesNotMatch(texto, frase, `${file}: served copy speaks to the installer, not to the reader (${frase})`);
+    }
+  }
   assert.match(components, /\.card\s*\{[^}]*?border-color:\s*transparent;[^}]*?box-shadow:\s*var\(--shadow-raised\)/, "a card rests on one boundary: shadow only, transparent border");
   assert.match(components, /\.card:hover,\s*\.card:focus-within\s*\{[^}]*?border-color:\s*var\(--color-ink-soft\);[^}]*?box-shadow:\s*var\(--shadow-lifted\)/, "the card border returns on hover and focus");
   assert.doesNotMatch(components, /\.surface \.card\s*[,{]/, "the resting boundary no longer depends on the stage tint");
@@ -272,7 +286,7 @@ test("catalog contains its comparison grid and pairs every card with a generic R
 
 test("contact declares the no-JavaScript boundary before the inert control", () => {
   const html = readFileSync("contato/index.html", "utf8");
-  assert.match(html, /<noscript class="notice">\s*<p>\s*A validação assistida requer JavaScript\. Use um canal direto verificado\.\s*<\/p>\s*<\/noscript>\s*<button class="button" type="button" data-form-submit>/);
+  assert.match(html, /<noscript class="notice">\s*<p>\s*A validação assistida requer JavaScript\. Use um dos contatos desta página\.\s*<\/p>\s*<\/noscript>\s*<button class="button" type="button" data-form-submit>/);
   assert.equal((html.match(/<noscript/g) ?? []).length, 1);
   assert.doesNotMatch(html, /<noscript[\s\S]*?<a\b[\s\S]*?<\/noscript>/, "no link or fake channel inside the notice");
 });
