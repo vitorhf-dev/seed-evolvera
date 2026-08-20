@@ -138,6 +138,27 @@ test("semantic token/color authority, media contracts and static package are fix
   // prospective client that "this template needs a transport integration" and to "configure the
   // integration" — the same leak as an adaptation marker, in prose instead of brackets. Honesty about
   // what the form does is kept in the visitor's own terms, not in the seed's implementation terms.
+  // Âncora estável por seção. Sem isso cada adaptação inventava os próprios ids, e quem precisava
+  // apontar para o contato dependia dessa improvisação: numa geração real o guard de contato
+  // placeholder não achou âncora nenhuma e deixou oito âncoras sem href — controles mortos, não
+  // focalizáveis. O id acompanha o data-component, que o modelo preserva (medido em 6 de 6 sites
+  // gerados). As duas exceções mantêm o nome que seus links internos já usam.
+  const ancoraPropria = { "catalog-grid": "catalogo-familias", process: "processo-capacidade" };
+  for (const { file } of expectedPages) {
+    const html = readFileSync(file, "utf8");
+    const secoes = [...html.matchAll(/<section\b([^>]*)>/g)].map(([, attrs]) => attrs).filter((attrs) => /data-component=/.test(attrs));
+    assert.ok(secoes.length >= 4, `${file}: sem seções declaradas`);
+    const ids = [];
+    for (const attrs of secoes) {
+      const componente = attrs.match(/data-component="([^"]+)"/)[1];
+      const id = attrs.match(/\bid="([^"]+)"/);
+      assert.ok(id, `${file}: seção ${componente} sem âncora estável`);
+      const esperado = file.includes("catalogo/index") || file.includes("servico-exemplo") ? (ancoraPropria[componente] ?? componente) : componente;
+      assert.equal(id[1], esperado, `${file}: âncora de ${componente} deve ser #${esperado}`);
+      ids.push(id[1]);
+    }
+    assert.equal(new Set(ids).size, ids.length, `${file}: âncora duplicada`);
+  }
   // Os marcadores de adaptação continuam visíveis de propósito para revisão humana; o que se proíbe
   // aqui é prosa que explica a construção da página dentro do conteúdo servido.
   const vozDeInstalador = [/\bo template\b/i, /\beste template\b/i, /integração de transporte/i, /conclua a adaptação/i, /antes da publicação/i, /configure (?:um|a) (?:endpoint|integração)/i];
@@ -243,9 +264,9 @@ test("catalog contains its comparison grid and pairs every card with a generic R
   const html = readFileSync(file, "utf8");
 
   // Containment: the grid section is authored inside the filter section, so the rail can span the whole comparison.
-  const comparison = html.match(/<section class="section catalog-comparison" data-component="filter">[\s\S]*?<section class="section surface" data-component="selection-help">/);
+  const comparison = html.match(/<section class="section catalog-comparison" id="filter" data-component="filter">[\s\S]*?<section class="section surface" id="selection-help" data-component="selection-help">/);
   assert.ok(comparison, "filter section precedes selection-help");
-  const filterSection = html.slice(html.indexOf('<section class="section catalog-comparison" data-component="filter">'), html.indexOf('<section class="section surface" data-component="selection-help">'));
+  const filterSection = html.slice(html.indexOf('<section class="section catalog-comparison" id="filter" data-component="filter">'), html.indexOf('<section class="section surface" id="selection-help" data-component="selection-help">'));
   assert.match(filterSection, /<section class="section catalog-comparison__layout" id="catalogo-familias" data-component="catalog-grid">/, "grid section is nested inside the comparison");
   assert.equal((filterSection.match(/data-component="catalog-grid"/g) ?? []).length, 1);
   assert.match(filterSection, /<div class="filter catalog-rail" data-catalog-filter>/, "the filter panel is the sticky rail");

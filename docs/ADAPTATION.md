@@ -30,6 +30,18 @@ Do not publish leadership, compatibility, availability, stock, pricing, performa
 | `/servicos/servico-exemplo/` / `servicos/servico-exemplo/index.html` | `hero`, `scope-exclusions`, `process`, `technical-inputs`, `evidence`, `sectors`, `faq-cta`, `cta` | capability scope, exclusions, inputs, method/evidence and verified contexts |
 | `/contato/` / `contato/index.html` | `hero`, `form-direct-channels`, `next-steps`, `checklist-faq` | direct channels, approved legal/consent text and later transport integration |
 
+### Stable section anchors
+
+Every `<section>` that declares a `data-component` also carries an `id` equal to it, so `#hero`,
+`#sectors`, `#process`, `#cta` and the rest are addressable on any page without inspecting the
+markup first. Two sections keep the anchor name their own in-page links already use:
+`catalog-grid` answers to `#catalogo-familias` and the capability `process` to `#processo-capacidade`.
+
+Keep these anchors when adapting. They are what lets an in-page CTA, a collapsed multi-page link or
+a tool that must redirect a contact button land somewhere real. Renaming a section's anchor is a
+breaking change even when the visible copy is identical, because callers outside the page cannot see
+that it moved. Add new sections with the same rule: `id` equal to `data-component`.
+
 Stable component families are `site-shell`, `hero`, `proof-rail`, `cards`, `split-feature`, `sectors`, `process`, `specifications`, `gallery`, `faq`, `cta` and `inquiry-form`. The browser entry is `scripts/main.js`; its local modules are `mobile-nav.js`, `scroll-lock.js`, `catalog-filter.js`, `gallery.js`, `faq.js`, `reveal.js`, `video.js` and `inquiry-form.js`. Preserve fail-open behavior and the native fallback of each module.
 
 ### Density contract
